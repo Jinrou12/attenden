@@ -317,6 +317,33 @@ class AttendanceApp {
     if (this.activeTab === 'daily') this.renderDailyView();
   }
 
+  clearAllActiveViewToNone() {
+    const students = this.getClassStudents();
+    if (this.activeTab === 'weekly') {
+      const daysCount = this.getDaysInActiveMonth();
+      const weeks = [
+        { start: 1, end: 7 },
+        { start: 8, end: 14 },
+        { start: 15, end: 21 },
+        { start: 22, end: 28 },
+        { start: 29, end: daysCount }
+      ];
+      const currentWeek = weeks[this.selectedWeekIndex] || weeks[0];
+      students.forEach(std => {
+        for (let d = currentWeek.start; d <= Math.min(currentWeek.end, daysCount); d++) {
+          this.setAttendanceRecord(std.id, d, 'NONE', 'AM');
+          this.setAttendanceRecord(std.id, d, 'NONE', 'PM');
+        }
+      });
+    } else {
+      students.forEach(std => {
+        this.setAttendanceRecord(std.id, this.selectedDailyDate, 'NONE', 'AM');
+        this.setAttendanceRecord(std.id, this.selectedDailyDate, 'NONE', 'PM');
+      });
+    }
+    this.render();
+  }
+
   setSearch(query) {
     this.searchQuery = query.trim();
     if (this.activeTab === 'weekly') this.renderWeeklyView();
@@ -546,7 +573,7 @@ class AttendanceApp {
           <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A</button>
           <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L</button>
           <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> -</button>
-          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> ↻</button>
+          <button class="picker-btn status-cycle" onclick="app.clearAllActiveViewToNone()" title="លុបទៅជាប្រអបទទេទាំងអស់"><i class="lucide-refresh-cw"></i> ↻</button>
         </div>
       </div>
 
@@ -731,7 +758,7 @@ class AttendanceApp {
           <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A</button>
           <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L</button>
           <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> -</button>
-          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> ↻</button>
+          <button class="picker-btn status-cycle" onclick="app.clearAllActiveViewToNone()" title="លុបទៅជាប្រអបទទេទាំងអស់"><i class="lucide-refresh-cw"></i> ↻</button>
         </div>
       </div>
 
