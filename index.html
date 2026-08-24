@@ -47,54 +47,12 @@
 
   <div class="app-container">
 
-    <!-- Mobile Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
-      <div>
-        <div class="brand-header">
-          <div class="brand-logo"></div>
-          <div>
-            <div class="brand-title">វត្តមានសិស្ស</div>
-            <div class="brand-subtitle">ប្រព័ន្ធស្រង់វត្តមាន (ច័ន្ទ-សៅរ៍ ១ ព្រឹក)</div>
-          </div>
-        </div>
-
-        <div class="section-title">បញ្ជីថ្នាក់រៀន</div>
-        <ul class="nav-list" id="classListNav">
-          <!-- Dynamically filled by JS -->
-        </ul>
-
-        <button class="btn btn-secondary btn-sm" id="btnAddClass" style="width: 100%; margin-top: 0.75rem; justify-content: flex-start;">
-          <i class="lucide-plus"></i> បន្ថែមថ្នាក់រៀនថ្មី...
-        </button>
-        <button class="btn btn-secondary btn-sm" onclick="app.triggerExcelImport()" style="width: 100%; margin-top: 0.4rem; justify-content: flex-start; color: var(--primary);">
-          <i class="lucide-file-spreadsheet"></i> នាំចូល Excel (.xlsx)...
-        </button>
-      </div>
-
-      <!-- Sidebar Footer Tools -->
-      <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
-        <button class="btn btn-secondary btn-sm" id="btnThemeToggle" style="justify-content: flex-start; color: var(--text-sidebar);">
-          <i class="lucide-moon"></i> ផ្លាស់ប្តូរ Theme
-        </button>
-        <button class="btn btn-secondary btn-sm" id="btnResetSampleData" style="justify-content: flex-start; color: var(--status-a-text);">
-          <i class="lucide-refresh-cw"></i> កំណត់ទិន្នន័យគំរូឡើងវិញ
-        </button>
-      </div>
-    </aside>
-
     <!-- Main Content Area -->
     <main class="main-wrapper">
 
       <!-- Top Header Navigation -->
       <header class="topbar">
         <div class="topbar-left">
-          <!-- Mobile Hamburger Menu Button -->
-          <button class="mobile-menu-btn" id="btnMobileMenu" aria-label="Toggle Menu">
-            <i class="lucide-menu"></i>
-          </button>
           <!-- Topbar School Seal Logo -->
           <div class="topbar-logo"></div>
           <div class="class-info-badge">

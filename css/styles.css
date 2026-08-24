@@ -192,17 +192,11 @@ body::before {
 }
 
 /* ============================================================ */
-/*  SIDEBAR                                                     */
+/*  SIDEBAR (Removed as requested)                               */
 /* ============================================================ */
-.sidebar {
-  width: var(--sidebar-width);
-  background: linear-gradient(180deg, #0a1122 0%, #080e1e 50%, #060b18 100%);
-  color: var(--text-sidebar);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 1.25rem 0.9rem;
-  border-right: 1px solid rgba(99,102,241,0.1);
+.sidebar, .sidebar-overlay, .mobile-menu-btn {
+  display: none !important;
+}
   flex-shrink: 0;
   z-index: 20;
   position: relative;
