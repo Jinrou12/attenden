@@ -494,10 +494,6 @@ class AttendanceApp {
         <td style="padding: 0.85rem 1rem; font-weight: 600;">${i + 1}</td>
         <td style="padding: 0.85rem 1rem; font-weight: 700;">${std.name}</td>
         ${cells}
-        <td style="text-align: center; font-weight: 700; color: var(--status-p-text);">${p}</td>
-        <td style="text-align: center; font-weight: 700; color: var(--status-a-text);">${a}</td>
-        <td style="text-align: center; font-weight: 700; color: var(--status-l-text);">${l}</td>
-        <td style="text-align: center; font-weight: 700;"><span class="rate-badge rate-high">${ratePct}%</span></td>
       </tr>`;
     }).join('');
 
@@ -553,10 +549,6 @@ class AttendanceApp {
               <th style="padding: 0.75rem 0.5rem; width: 45px;" rowspan="2">ល.រ</th>
               <th style="padding: 0.75rem 0.5rem; text-align: left; width: 180px;" rowspan="2">ឈ្មោះសិស្ស</th>
               ${headerDaysHtml}
-              <th class="summary-col" style="padding: 0.75rem 0.3rem; text-align: center;" rowspan="2">P</th>
-              <th class="summary-col" style="padding: 0.75rem 0.3rem; text-align: center;" rowspan="2">A</th>
-              <th class="summary-col" style="padding: 0.75rem 0.3rem; text-align: center;" rowspan="2">L</th>
-              <th class="summary-col" style="padding: 0.75rem 0.3rem; text-align: center;" rowspan="2">%</th>
             </tr>
             <tr>${subShiftHeaderHtml}</tr>
           </thead>
@@ -627,20 +619,6 @@ class AttendanceApp {
       const statusAM = this.getAttendanceRecord(std.id, this.selectedDailyDate, 'AM');
       const statusPM = this.getAttendanceRecord(std.id, this.selectedDailyDate, 'PM');
 
-      let p = 0, a = 0, l = 0;
-      if (statusAM === 'P') p++;
-      if (statusAM === 'A') a++;
-      if (statusAM === 'L') l++;
-
-      if (!isSaturday) {
-        if (statusPM === 'P') p++;
-        if (statusPM === 'A') a++;
-        if (statusPM === 'L') l++;
-      }
-
-      const totalMarked = p + a + l;
-      const ratePct = totalMarked > 0 ? Math.round((p / totalMarked) * 100) : 100;
-
       return `<tr style="border-bottom: 1px solid var(--border-color);">
         <td style="padding: 0.85rem 1rem; font-weight: 600;">${i + 1}</td>
         <td style="padding: 0.85rem 1rem; font-weight: 700;">${std.name}</td>
@@ -656,10 +634,6 @@ class AttendanceApp {
             </button>
           </td>
         ` : ''}
-        <td style="text-align: center; font-weight: 700; color: var(--status-p-text);">${p}</td>
-        <td style="text-align: center; font-weight: 700; color: var(--status-a-text);">${a}</td>
-        <td style="text-align: center; font-weight: 700; color: var(--status-l-text);">${l}</td>
-        <td style="text-align: center; font-weight: 700;"><span class="rate-badge rate-high">${ratePct}%</span></td>
       </tr>`;
     }).join('');
 
@@ -674,9 +648,7 @@ class AttendanceApp {
         </div>
       </div>
 
-      <!-- Combined Search + Status Picker Toolbar (Daily View) -->
       <div class="search-bar-toolbar">
-        <!-- Left: Search Input -->
         <div class="search-bar-inner">
           <i class="lucide-search search-bar-icon"></i>
           <input
@@ -695,10 +667,8 @@ class AttendanceApp {
           : `<span class="search-bar-hint"><i class="lucide-users" style="font-size:0.8rem;"></i> សិស្សសរុប <strong>${filteredStudents.length}</strong> នាក់</span>`
         }
 
-        <!-- Divider -->
         <div class="toolbar-divider"></div>
 
-        <!-- Right: Status Picker Buttons -->
         <div class="picker-buttons">
           <button class="picker-btn status-p ${this.activeSelectedStatus === 'P' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('P')"><span class="dot-badge green"></span> P (វត្តមាន)</button>
           <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A (អវត្តមាន)</button>
@@ -716,11 +686,6 @@ class AttendanceApp {
               <th style="padding: 0.75rem 1rem; text-align: left; width: 240px;">ឈ្មោះសិស្ស</th>
               <th style="padding: 0.75rem 1rem; text-align: center; color: var(--primary);">🌅 វេនព្រឹក (AM)</th>
               ${!isSaturday ? `<th style="padding: 0.75rem 1rem; text-align: center; color: var(--secondary);">🌇 វេនល្ងាច (PM)</th>` : ''}
-              <th style="padding: 0.75rem 0.5rem; text-align: center; width: 60px;">P</th>
-              <th style="padding: 0.75rem 0.5rem; text-align: center; width: 60px;">A</th>
-              <th style="padding: 0.75rem 0.5rem; text-align: center; width: 60px;">L</th>
-              <th style="padding: 0.75rem 0.5rem; text-align: center; width: 90px;">ភាគរយ</th>
-            </tr>
           </thead>
           <tbody>
             ${rowsHtml || '<tr><td colspan="8" style="padding: 2rem; text-align: center; color: var(--text-muted);">គ្មានសិស្ស</td></tr>'}
