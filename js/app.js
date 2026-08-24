@@ -485,67 +485,24 @@ class AttendanceApp {
       </tr>`;
     };
 
-    let tableContentHtml = '';
-    if (students.length > 15) {
-      const half = Math.ceil(students.length / 2);
-      const part1 = students.slice(0, half);
-      const part2 = students.slice(half);
-      const rowsPart1 = part1.map((std, i) => renderRow(std, i)).join('');
-      const rowsPart2 = part2.map((std, i) => renderRow(std, i + half)).join('');
-      tableContentHtml = `
-        <div class="split-tables-wrapper">
-          <div class="split-table-col">
-            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
-              <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
-                <thead>
-                  <tr style="background: var(--bg-main);">
-                    <th style="padding: 0.65rem 0.5rem; width: 40px;" rowspan="2">ល.រ</th>
-                    <th style="padding: 0.65rem 0.5rem; text-align: left;" rowspan="2">ឈ្មោះសិស្ស (1-${half})</th>
-                    ${headerDaysHtml}
-                  </tr>
-                  <tr>${subShiftHeaderHtml}</tr>
-                </thead>
-                <tbody>${rowsPart1}</tbody>
-              </table>
-            </div>
-          </div>
-          <div class="split-table-col">
-            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
-              <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
-                <thead>
-                  <tr style="background: var(--bg-main);">
-                    <th style="padding: 0.65rem 0.5rem; width: 40px;" rowspan="2">ល.រ</th>
-                    <th style="padding: 0.65rem 0.5rem; text-align: left;" rowspan="2">ឈ្មោះសិស្ស (${half + 1}-${students.length})</th>
-                    ${headerDaysHtml}
-                  </tr>
-                  <tr>${subShiftHeaderHtml}</tr>
-                </thead>
-                <tbody>${rowsPart2}</tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      `;
-    } else {
-      const rowsHtml = students.map((std, i) => renderRow(std, i)).join('');
-      tableContentHtml = `
-        <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
-          <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: var(--bg-main);">
-                <th style="padding: 0.75rem 0.5rem; width: 45px;" rowspan="2">ល.រ</th>
-                <th style="padding: 0.75rem 0.5rem; text-align: left; width: 180px;" rowspan="2">ឈ្មោះសិស្ស</th>
-                ${headerDaysHtml}
-              </tr>
-              <tr>${subShiftHeaderHtml}</tr>
-            </thead>
-            <tbody>
-              ${rowsHtml || '<tr><td colspan="20" style="padding: 2rem; text-align: center; color: var(--text-muted);">គ្មានសិស្ស</td></tr>'}
-            </tbody>
-          </table>
-        </div>
-      `;
-    }
+    const rowsHtml = students.map((std, i) => renderRow(std, i)).join('');
+    tableContentHtml = `
+      <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
+        <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: var(--bg-main);">
+              <th style="padding: 0.75rem 0.5rem; width: 45px;" rowspan="2">ល.រ</th>
+              <th style="padding: 0.75rem 0.5rem; text-align: left; width: 180px;" rowspan="2">ឈ្មោះសិស្ស</th>
+              ${headerDaysHtml}
+            </tr>
+            <tr>${subShiftHeaderHtml}</tr>
+          </thead>
+          <tbody>
+            ${rowsHtml || '<tr><td colspan="20" style="padding: 2rem; text-align: center; color: var(--text-muted);">គ្មានសិស្ស</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    `;
 
     this.elViewWeekly.innerHTML = `
       <div class="week-picker-box">
