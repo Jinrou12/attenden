@@ -1118,7 +1118,7 @@ class AttendanceApp {
           border-radius:50px; padding: 7px 16px;
         ">
           <span style="font-size:1rem;">${hour < 12 ? '🌅' : '🌇'}</span>
-          <span style="font-size:0.9rem; font-weight:700; color:#818cf8;">${session} · ${timeStr}</span>
+          <span style="font-size:0.9rem; font-weight:700; color:#818cf8;">${session}</span>
         </div>
       </div>
 
@@ -1138,11 +1138,6 @@ class AttendanceApp {
 
       <!-- Absent list -->
       <div>${absentListHtml}</div>
-
-      <!-- Footer watermark -->
-      <div style="margin-top:20px; padding-top:14px; border-top:1px solid ${isDark?'rgba(148,163,184,0.1)':'#e2e8f0'}; text-align:right;">
-        <span style="font-size:0.72rem; color:${isDark?'#475569':'#94a3b8'};">📋 Student Attendance System</span>
-      </div>
     `;
 
     document.body.appendChild(card);

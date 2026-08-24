@@ -10,7 +10,7 @@ const DEFAULT_SAMPLE_DATA = {
   classes: [
     {
       id: "cls_12_chun_nath",
-      name: "ថ្នាក់ទី១២ (សម្តេច ជុន ណាត)",
+      name: "ថ្នាក់ទី១១ (ព.វ.ជ.ណ)",
       room: "បន្ទប់ ៤០៤",
       teacher: "លោក អ៊ុច ពិសិដ្ឋ",
       subject: "មធ្យមសិក្សាទុតិយភូមិ",
