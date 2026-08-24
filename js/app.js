@@ -449,8 +449,8 @@ class AttendanceApp {
       const colSpan = isSaturday ? 1 : 2;
 
       return `<th colspan="${colSpan}" style="padding: 0.5rem; text-align: center; border-bottom: 1px solid var(--border-color); ${isSaturday ? 'background: rgba(245,158,11,0.08);' : ''} ${isToday ? 'background: rgba(5, 150, 105, 0.2) !important; color: var(--primary); font-weight:700;' : ''}">
-        <div>${KHMER_DAYS[dayOfWeekIndex]} ${isToday ? '★' : ''} ${isSaturday ? '(១ព្រឹក)' : ''}</div>
-        <div style="font-size: 1rem; font-weight: 700;">ថ្ងៃទី ${d}</div>
+        <div>${KHMER_DAYS[dayOfWeekIndex]} ${isToday ? '★' : ''}</div>
+        <div style="font-size: 1rem; font-weight: 700;">${d}</div>
       </th>`;
     }).join('');
 
@@ -492,10 +492,7 @@ class AttendanceApp {
 
       return `<tr style="border-bottom: 1px solid var(--border-color);">
         <td style="padding: 0.85rem 1rem; font-weight: 600;">${i + 1}</td>
-        <td style="padding: 0.85rem 1rem; font-weight: 700;">
-          ${std.name}
-          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">${std.code} (${std.gender})</div>
-        </td>
+        <td style="padding: 0.85rem 1rem; font-weight: 700;">${std.name}</td>
         ${cells}
         <td style="text-align: center; font-weight: 700; color: var(--status-p-text);">${p}</td>
         <td style="text-align: center; font-weight: 700; color: var(--status-a-text);">${a}</td>
@@ -646,10 +643,7 @@ class AttendanceApp {
 
       return `<tr style="border-bottom: 1px solid var(--border-color);">
         <td style="padding: 0.85rem 1rem; font-weight: 600;">${i + 1}</td>
-        <td style="padding: 0.85rem 1rem; font-weight: 700;">
-          ${std.name}
-          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">${std.code} (${std.gender})</div>
-        </td>
+        <td style="padding: 0.85rem 1rem; font-weight: 700;">${std.name}</td>
         <td style="text-align: center; padding: 0.5rem;">
           <button class="status-cell-btn ${statusAM}" onclick="app.onDailyCellClick('${std.id}', 'AM')" style="width: 38px; height: 38px; font-size: 0.95rem; font-weight: 700;" title="វេនព្រឹក">
             ${statusAM === 'NONE' ? '-' : statusAM}
