@@ -36,7 +36,7 @@
       <div>
         <div class="brand-header">
           <div class="brand-logo">
-            <img src="./img/logo.png" alt="ពុទ្ធិកវិទ្យាល័យ សម្តេច ជួន ណាត Logo" />
+            <img id="sidebarLogoImg" src="./img/logo.png" alt="ពុទ្ធិកវិទ្យាល័យ សម្តេច ជួន ណាត Logo" />
           </div>
           <div>
             <div class="brand-title">វត្តមានសិស្ស</div>
@@ -80,7 +80,7 @@
           </button>
           <!-- Topbar School Seal Logo -->
           <div class="topbar-logo">
-            <img src="./img/logo.png" alt="ពុទ្ធិកវិទ្យាល័យ សម្តេច ជួន ណាត Logo" />
+            <img id="topbarLogoImg" src="./img/logo.png" alt="ពុទ្ធិកវិទ្យាល័យ សម្តេច ជួន ណាត Logo" />
           </div>
           <div class="class-info-badge">
             <h1 class="class-title" id="currentClassName">ថ្នាក់ទី ១០ A</h1>
@@ -274,6 +274,24 @@
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="js/logoData.js?v=26"></script>
+  <script>
+    // Apply base64 logo from logoData.js to all logo <img> elements
+    (function() {
+      function applyLogo() {
+        var logoSrc = window.APP_LOGO;
+        if (!logoSrc) return;
+        ['sidebarLogoImg', 'topbarLogoImg'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) el.src = logoSrc;
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyLogo);
+      } else {
+        applyLogo();
+      }
+    })();
+  </script>
   <script src="js/sampleData.js?v=26"></script>
   <script src="js/app.js?v=26"></script>
   <script>
