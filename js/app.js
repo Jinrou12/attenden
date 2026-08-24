@@ -33,9 +33,18 @@ class AttendanceApp {
     this.activeSelectedStatus = 'P';
 
     this.initElements();
+    this.initLogos();
     this.bindEvents();
     this.startCambodiaClock();
     this.render();
+  }
+
+  initLogos() {
+    if (window.APP_LOGO) {
+      document.querySelectorAll('.brand-logo img, .topbar-logo img').forEach(img => {
+        img.src = window.APP_LOGO;
+      });
+    }
   }
 
   getCambodiaTime() {
