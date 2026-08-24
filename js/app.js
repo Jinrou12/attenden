@@ -506,9 +506,8 @@ class AttendanceApp {
 
     this.elViewWeekly.innerHTML = `
       <div class="filter-header-bar">
-        <div class="filter-header-left">
-          <h3 style="font-size: 1.15rem; font-weight: 700; white-space: nowrap;">តារាងស្រង់វត្តមាន 1-Week</h3>
-          <select id="weeklySelect" class="form-control" style="font-weight: 700; width: 260px;">
+        <div class="filter-header-left" style="width: 100%;">
+          <select id="weeklySelect" class="form-control" style="font-weight: 700; width: 100%;">
             ${weekOptions}
           </select>
         </div>
