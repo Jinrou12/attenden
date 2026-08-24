@@ -52,6 +52,9 @@
         <button class="btn btn-secondary btn-sm" id="btnAddClass" style="width: 100%; margin-top: 0.75rem; justify-content: flex-start;">
           <i class="lucide-plus"></i> បន្ថែមថ្នាក់រៀនថ្មី...
         </button>
+        <button class="btn btn-secondary btn-sm" onclick="app.triggerExcelImport()" style="width: 100%; margin-top: 0.4rem; justify-content: flex-start; color: var(--primary);">
+          <i class="lucide-file-spreadsheet"></i> នាំចូល Excel (.xlsx)...
+        </button>
       </div>
 
       <!-- Sidebar Footer Tools -->
@@ -112,6 +115,11 @@
         </div>
 
         <div class="topbar-right">
+          <button class="btn btn-secondary btn-sm" onclick="app.triggerExcelImport()" title="នាំចូលបញ្ជីឈ្មោះសិស្សពី Excel (.xlsx)">
+            <i class="lucide-file-spreadsheet"></i>
+            <span class="btn-label">នាំចូល Excel</span>
+          </button>
+
           <button class="btn btn-primary btn-sm" id="btnMarkAllPresentToday">
             <i class="lucide-check-check"></i>
             <span class="btn-label">វត្តមានទាំងអស់</span>
