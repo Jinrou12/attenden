@@ -1430,6 +1430,29 @@ body::before {
   color: var(--text-main);
 }
 
+/* Vertical divider between search and picker */
+.toolbar-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--border-color);
+  flex-shrink: 0;
+  align-self: center;
+  margin: 0 0.25rem;
+}
+
+/* Make picker-buttons inside search-bar-toolbar more compact */
+.search-bar-toolbar .picker-buttons {
+  background: transparent;
+  border: none;
+  padding: 0;
+  gap: 0.3rem;
+}
+
+.search-bar-toolbar .picker-btn {
+  padding: 0.38rem 0.75rem;
+  font-size: 0.82rem;
+}
+
 /* ============================================================ */
 /*  PICKER TOOLBAR                                              */
 /* ============================================================ */

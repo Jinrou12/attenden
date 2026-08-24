@@ -517,8 +517,9 @@ class AttendanceApp {
         </div>
       </div>
 
-      <!-- Search Student Name Bar -->
+      <!-- Combined Search + Status Picker Toolbar -->
       <div class="search-bar-toolbar">
+        <!-- Left: Search Input -->
         <div class="search-bar-inner">
           <i class="lucide-search search-bar-icon"></i>
           <input
@@ -533,11 +534,22 @@ class AttendanceApp {
           ${this.searchQuery ? `<button class="search-bar-clear" onclick="app.setSearch('')" title="Clear">&times;</button>` : ''}
         </div>
         ${this.searchQuery
-          ? `<span class="search-bar-result"><i class="lucide-filter" style="font-size:0.8rem;"></i> ស្វែងរករកឃើញ <strong>${filteredStudents.length}</strong> នាក់ &laquo;${this.searchQuery}&raquo;</span>`
+          ? `<span class="search-bar-result"><i class="lucide-filter" style="font-size:0.8rem;"></i> ស្វែងរករកឃើញ <strong>${filteredStudents.length}</strong> នាក់</span>`
           : `<span class="search-bar-hint"><i class="lucide-users" style="font-size:0.8rem;"></i> សិស្សសរុប <strong>${filteredStudents.length}</strong> នាក់</span>`
         }
-      </div>
 
+        <!-- Divider -->
+        <div class="toolbar-divider"></div>
+
+        <!-- Right: Status Picker Buttons -->
+        <div class="picker-buttons">
+          <button class="picker-btn status-p ${this.activeSelectedStatus === 'P' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('P')"><span class="dot-badge green"></span> P (វត្តមាន)</button>
+          <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A (អវត្តមាន)</button>
+          <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L (ច្បាប់)</button>
+          <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> -</button>
+          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> Cycle</button>
+        </div>
+      </div>
 
       <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
         <table style="width: 100%; border-collapse: collapse;">
@@ -672,8 +684,9 @@ class AttendanceApp {
         </button>
       </div>
 
-      <!-- Search Student Name Bar (Daily View) -->
+      <!-- Combined Search + Status Picker Toolbar (Daily View) -->
       <div class="search-bar-toolbar">
+        <!-- Left: Search Input -->
         <div class="search-bar-inner">
           <i class="lucide-search search-bar-icon"></i>
           <input
@@ -688,9 +701,21 @@ class AttendanceApp {
           ${this.searchQuery ? `<button class="search-bar-clear" onclick="app.setSearch('')" title="Clear">&times;</button>` : ''}
         </div>
         ${this.searchQuery
-          ? `<span class="search-bar-result"><i class="lucide-filter" style="font-size:0.8rem;"></i> ស្វែងរករកឃើញ <strong>${filteredStudents.length}</strong> នាក់ &laquo;${this.searchQuery}&raquo;</span>`
+          ? `<span class="search-bar-result"><i class="lucide-filter" style="font-size:0.8rem;"></i> ស្វែងរករកឃើញ <strong>${filteredStudents.length}</strong> នាក់</span>`
           : `<span class="search-bar-hint"><i class="lucide-users" style="font-size:0.8rem;"></i> សិស្សសរុប <strong>${filteredStudents.length}</strong> នាក់</span>`
         }
+
+        <!-- Divider -->
+        <div class="toolbar-divider"></div>
+
+        <!-- Right: Status Picker Buttons -->
+        <div class="picker-buttons">
+          <button class="picker-btn status-p ${this.activeSelectedStatus === 'P' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('P')"><span class="dot-badge green"></span> P (វត្តមាន)</button>
+          <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A (អវត្តមាន)</button>
+          <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L (ច្បាប់)</button>
+          <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> -</button>
+          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> Cycle</button>
+        </div>
       </div>
 
       <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
