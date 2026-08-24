@@ -1861,6 +1861,35 @@ body::before {
   to   { opacity: 0; transform: translateX(20px); }
 }
 
+/* Filter Header Bar */
+.filter-header-bar {
+  background: var(--bg-card);
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.filter-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
 /* ============================================================ */
 /*  RESPONSIVE MOBILE DESIGN (≤ 900px)                           */
 /* ============================================================ */
@@ -1933,18 +1962,29 @@ body::before {
     height: auto;
     min-height: 54px;
     padding: 0.5rem 0.75rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
     gap: 0.4rem;
   }
 
   .topbar-left {
-    flex: 1;
-    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
     gap: 0.5rem;
   }
 
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.4rem;
+  }
+
   .class-title {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
   }
 
   .class-meta {
@@ -1952,16 +1992,50 @@ body::before {
   }
 
   .date-selector-group {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.78rem;
+    padding: 0.25rem 0.45rem;
+    font-size: 0.75rem;
   }
 
   .cambodia-clock-badge {
     display: none;
   }
 
-  .topbar-right {
-    gap: 0.35rem;
+  /* Filter Header Bar on Mobile */
+  .filter-header-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.85rem;
+    gap: 0.75rem;
+  }
+
+  .filter-header-left {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .filter-header-left h3 {
+    font-size: 0.95rem !important;
+    white-space: normal !important;
+  }
+
+  .filter-header-left select {
+    width: 100% !important;
+    font-size: 0.82rem;
+  }
+
+  .filter-header-right {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .filter-header-right .btn {
+    flex: 1;
+    justify-content: center;
+    font-size: 0.75rem;
+    padding: 0.45rem 0.4rem;
+    white-space: nowrap;
   }
 
   /* Navigation Tabs */
@@ -2014,17 +2088,22 @@ body::before {
   }
 
   .search-bar-toolbar .picker-buttons {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     width: 100%;
     gap: 0.25rem;
-    justify-content: space-between;
   }
 
   .search-bar-toolbar .picker-btn {
-    flex: 1;
-    justify-content: center;
-    padding: 0.4rem 0.25rem;
+    width: 100%;
+    padding: 0.45rem 0.1rem;
     font-size: 0.75rem;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .search-bar-toolbar .picker-btn .dot-badge {
+    display: none;
   }
 
   /* Table Sticky Student Name Column */

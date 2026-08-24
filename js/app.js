@@ -505,14 +505,14 @@ class AttendanceApp {
     }).join('');
 
     this.elViewWeekly.innerHTML = `
-      <div style="background: var(--bg-card); padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-          <h3 style="font-size: 1.15rem; font-weight: 700;">តារាងស្រង់វត្តមាន 1-Week (ច័ន្ទ-សៅរ៍ ១ ព្រឹក)</h3>
+      <div class="filter-header-bar">
+        <div class="filter-header-left">
+          <h3 style="font-size: 1.15rem; font-weight: 700; white-space: nowrap;">តារាងស្រង់វត្តមាន 1-Week</h3>
           <select id="weeklySelect" class="form-control" style="font-weight: 700; width: 260px;">
             ${weekOptions}
           </select>
         </div>
-        <div style="display: flex; gap: 0.75rem;">
+        <div class="filter-header-right">
           <button class="btn btn-secondary btn-sm" onclick="app.openAddStudentModal()">
             <i class="lucide-user-plus"></i> បន្ថែមសិស្ស
           </button>
@@ -677,16 +677,18 @@ class AttendanceApp {
     }).join('');
 
     this.elViewDaily.innerHTML = `
-      <div style="background: var(--bg-card); padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-          <h3 style="font-size: 1.1rem; font-weight: 700;">ស្រង់វត្តមានប្រចាំថ្ងៃ ${isSaturday ? '(ថ្ងៃសៅរ៍ រៀនតែ ១ ព្រឹក)' : ''}</h3>
+      <div class="filter-header-bar">
+        <div class="filter-header-left">
+          <h3 style="font-size: 1.1rem; font-weight: 700; white-space: nowrap;">ស្រង់វត្តមានប្រចាំថ្ងៃ</h3>
           <select id="dailyDateSelect" class="form-control" style="font-weight: 600; width: 260px;">
             ${optionsHtml}
           </select>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="app.markAllPresentDaily(${this.selectedDailyDate})">
-          <i class="lucide-check-circle"></i> វត្តមានទាំងអស់ថ្ងៃនេះ
-        </button>
+        <div class="filter-header-right">
+          <button class="btn btn-primary btn-sm" onclick="app.markAllPresentDaily(${this.selectedDailyDate})">
+            <i class="lucide-check-circle"></i> វត្តមានទាំងអស់ថ្ងៃនេះ
+          </button>
+        </div>
       </div>
 
       <!-- Combined Search + Status Picker Toolbar (Daily View) -->
