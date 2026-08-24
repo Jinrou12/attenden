@@ -307,6 +307,12 @@ class AttendanceApp {
     if (this.activeTab === 'daily') this.renderDailyView();
   }
 
+  setSearch(query) {
+    this.searchQuery = query.trim();
+    if (this.activeTab === 'weekly') this.renderWeeklyView();
+    if (this.activeTab === 'daily') this.renderDailyView();
+  }
+
   onCellClick(studentId, day, shift = 'AM') {
     if (this.activeSelectedStatus === 'CYCLE') {
       this.cycleStatus(studentId, day, shift);
@@ -401,7 +407,11 @@ class AttendanceApp {
   }
 
   renderWeeklyView() {
-    const students = this.getClassStudents();
+    const allStudents = this.getClassStudents();
+    const filteredStudents = this.searchQuery
+      ? allStudents.filter(s => s.name && s.name.toLowerCase().includes(this.searchQuery.toLowerCase()))
+      : allStudents;
+    const students = filteredStudents;
     const daysCount = this.getDaysInActiveMonth();
 
     const weeks = [
@@ -507,17 +517,27 @@ class AttendanceApp {
         </div>
       </div>
 
-      <!-- Selection Mode Toolbar -->
-      <div class="picker-toolbar">
-        <span class="picker-label"><i class="lucide-mouse-pointer-click" style="color:var(--primary);"></i> ឧបករណ៍ចុចស្រង់វត្តមាន (Active Tool)៖</span>
-        <div class="picker-buttons">
-          <button class="picker-btn status-p ${this.activeSelectedStatus === 'P' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('P')"><span class="dot-badge green"></span> P (វត្តមាន)</button>
-          <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A (អវត្តមាន)</button>
-          <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L (ច្បាប់)</button>
-          <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> - (លុប)</button>
-          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> ប្តូរតាមលំដាប់ (Cycle)</button>
+      <!-- Search Student Name Bar -->
+      <div class="search-bar-toolbar">
+        <div class="search-bar-inner">
+          <i class="lucide-search search-bar-icon"></i>
+          <input
+            type="text"
+            id="weeklySearchInput"
+            class="search-bar-input"
+            placeholder="ស្វែរកឈ្មោះសិស្ស... (Search student name)"
+            value="${this.searchQuery}"
+            oninput="app.setSearch(this.value)"
+            autocomplete="off"
+          />
+          ${this.searchQuery ? `<button class="search-bar-clear" onclick="app.setSearch('')" title="Clear">&times;</button>` : ''}
         </div>
+        ${this.searchQuery
+          ? `<span class="search-bar-result"><i class="lucide-filter" style="font-size:0.8rem;"></i> ស្វែងរករកឃើញ <strong>${filteredStudents.length}</strong> នាក់ &laquo;${this.searchQuery}&raquo;</span>`
+          : `<span class="search-bar-hint"><i class="lucide-users" style="font-size:0.8rem;"></i> សិស្សសរុប <strong>${filteredStudents.length}</strong> នាក់</span>`
+        }
       </div>
+
 
       <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
         <table style="width: 100%; border-collapse: collapse;">
@@ -578,7 +598,11 @@ class AttendanceApp {
   }
 
   renderDailyView() {
-    const students = this.getClassStudents();
+    const allStudents = this.getClassStudents();
+    const filteredStudents = this.searchQuery
+      ? allStudents.filter(s => s.name && s.name.toLowerCase().includes(this.searchQuery.toLowerCase()))
+      : allStudents;
+    const students = filteredStudents;
     const daysCount = this.getDaysInActiveMonth();
     
     let optionsHtml = '';
@@ -648,16 +672,25 @@ class AttendanceApp {
         </button>
       </div>
 
-      <!-- Selection Mode Toolbar for Daily View -->
-      <div class="picker-toolbar">
-        <span class="picker-label"><i class="lucide-mouse-pointer-click" style="color:var(--primary);"></i> ឧបករណ៍ចុចស្រង់វត្តមានប្រចាំថ្ងៃ (Active Tool)៖</span>
-        <div class="picker-buttons">
-          <button class="picker-btn status-p ${this.activeSelectedStatus === 'P' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('P')"><span class="dot-badge green"></span> P (វត្តមាន)</button>
-          <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A (អវត្តមាន)</button>
-          <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L (ច្បាប់)</button>
-          <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> - (លុប)</button>
-          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> ប្តូរតាមលំដាប់ (Cycle)</button>
+      <!-- Search Student Name Bar (Daily View) -->
+      <div class="search-bar-toolbar">
+        <div class="search-bar-inner">
+          <i class="lucide-search search-bar-icon"></i>
+          <input
+            type="text"
+            id="dailySearchInput"
+            class="search-bar-input"
+            placeholder="ស្វែរកឈ្មោះសិស្ស... (Search student name)"
+            value="${this.searchQuery}"
+            oninput="app.setSearch(this.value)"
+            autocomplete="off"
+          />
+          ${this.searchQuery ? `<button class="search-bar-clear" onclick="app.setSearch('')" title="Clear">&times;</button>` : ''}
         </div>
+        ${this.searchQuery
+          ? `<span class="search-bar-result"><i class="lucide-filter" style="font-size:0.8rem;"></i> ស្វែងរករកឃើញ <strong>${filteredStudents.length}</strong> នាក់ &laquo;${this.searchQuery}&raquo;</span>`
+          : `<span class="search-bar-hint"><i class="lucide-users" style="font-size:0.8rem;"></i> សិស្សសរុប <strong>${filteredStudents.length}</strong> នាក់</span>`
+        }
       </div>
 
       <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
