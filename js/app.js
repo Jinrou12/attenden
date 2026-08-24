@@ -486,7 +486,7 @@ class AttendanceApp {
     };
 
     const rowsHtml = students.map((std, i) => renderRow(std, i)).join('');
-    tableContentHtml = `
+    const tableContentHtml = `
       <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
         <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
           <thead>
