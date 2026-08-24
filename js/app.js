@@ -668,7 +668,7 @@ class AttendanceApp {
 
     let tableContentHtml = '';
 
-    if (students.length > 15) {
+    if (students.length > 15 && !this.searchQuery) {
       const half = Math.ceil(students.length / 2);
       const part1 = students.slice(0, half);
       const part2 = students.slice(half);
@@ -716,10 +716,9 @@ class AttendanceApp {
           <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="background: var(--bg-main);">
-                <th style="padding: 0.75rem 0.5rem; width: 45px;">ល.រ</th>
-                <th style="padding: 0.75rem 1rem; text-align: left; width: 240px;">ឈ្មោះសិស្ស</th>
-                <th style="padding: 0.75rem 1rem; text-align: center; color: var(--primary);">🌅 វេនព្រឹក (AM)</th>
-                ${!isSaturday ? `<th style="padding: 0.75rem 1rem; text-align: center; color: var(--secondary);">🌇 វេនល្ងាច (PM)</th>` : ''}
+                <th style="padding: 0.45rem 0.5rem; text-align: left; font-size: 0.75rem; color: var(--text-main); font-weight: 800;">ឈ្មោះសិស្ស (${students.length} នាក់)</th>
+                <th style="padding: 0.45rem 0.1rem; text-align: center; color: var(--primary); font-size: 0.7rem; font-weight: 800;">AM</th>
+                ${!isSaturday ? `<th style="padding: 0.45rem 0.1rem; text-align: center; color: var(--secondary); font-size: 0.7rem; font-weight: 800;">PM</th>` : ''}
               </tr>
             </thead>
             <tbody>
