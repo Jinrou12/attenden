@@ -638,15 +638,15 @@ class AttendanceApp {
 
       tableContentHtml = `
         <div class="split-tables-wrapper">
-          <div class="split-table-col">
-            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
+          <div class="split-table-col split-table-col-1">
+            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid rgba(16, 185, 129, 0.25); overflow-x: auto; box-shadow: var(--shadow-sm);">
               <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
-                  <tr style="background: var(--bg-main);">
-                    <th style="padding: 0.5rem 0.2rem; width: 22px;">ល.រ</th>
-                    <th style="padding: 0.5rem 0.2rem; text-align: left;">ឈ្មោះ (1-${half})</th>
-                    <th style="padding: 0.5rem 0.1rem; text-align: center; color: var(--primary);">ព្រឹក</th>
-                    ${!isSaturday ? `<th style="padding: 0.5rem 0.1rem; text-align: center; color: var(--secondary);">ល្ងាច</th>` : ''}
+                  <tr style="background: rgba(16, 185, 129, 0.08);">
+                    <th style="padding: 0.4rem 0.1rem; width: 16px; font-size: 0.68rem;">ល.រ</th>
+                    <th style="padding: 0.4rem 0.2rem; text-align: left; font-size: 0.72rem; color: #34d399; font-weight: 800;">1-${half}</th>
+                    <th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--primary); font-size: 0.68rem; font-weight: 800;">AM</th>
+                    ${!isSaturday ? `<th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--secondary); font-size: 0.68rem; font-weight: 800;">PM</th>` : ''}
                   </tr>
                 </thead>
                 <tbody>${rowsPart1}</tbody>
@@ -654,15 +654,15 @@ class AttendanceApp {
             </div>
           </div>
 
-          <div class="split-table-col">
-            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
+          <div class="split-table-col split-table-col-2">
+            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid rgba(56, 189, 248, 0.25); overflow-x: auto; box-shadow: var(--shadow-sm);">
               <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
-                  <tr style="background: var(--bg-main);">
-                    <th style="padding: 0.5rem 0.2rem; width: 22px;">ល.រ</th>
-                    <th style="padding: 0.5rem 0.2rem; text-align: left;">ឈ្មោះ (${half + 1}-${students.length})</th>
-                    <th style="padding: 0.5rem 0.1rem; text-align: center; color: var(--primary);">ព្រឹក</th>
-                    ${!isSaturday ? `<th style="padding: 0.5rem 0.1rem; text-align: center; color: var(--secondary);">ល្ងាច</th>` : ''}
+                  <tr style="background: rgba(56, 189, 248, 0.08);">
+                    <th style="padding: 0.4rem 0.1rem; width: 16px; font-size: 0.68rem;">ល.រ</th>
+                    <th style="padding: 0.4rem 0.2rem; text-align: left; font-size: 0.72rem; color: #38bdf8; font-weight: 800;">${half + 1}-${students.length}</th>
+                    <th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--primary); font-size: 0.68rem; font-weight: 800;">AM</th>
+                    ${!isSaturday ? `<th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--secondary); font-size: 0.68rem; font-weight: 800;">PM</th>` : ''}
                   </tr>
                 </thead>
                 <tbody>${rowsPart2}</tbody>
