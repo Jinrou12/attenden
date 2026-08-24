@@ -643,10 +643,10 @@ class AttendanceApp {
               <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
                   <tr style="background: var(--bg-main);">
-                    <th style="padding: 0.75rem 0.5rem; width: 45px;">ល.រ</th>
-                    <th style="padding: 0.75rem 0.5rem; text-align: left;">ឈ្មោះសិស្ស (1-${half})</th>
-                    <th style="padding: 0.75rem 0.5rem; text-align: center; color: var(--primary);">🌅 វេនព្រឹក (AM)</th>
-                    ${!isSaturday ? `<th style="padding: 0.75rem 0.5rem; text-align: center; color: var(--secondary);">🌇 វេនល្ងាច (PM)</th>` : ''}
+                    <th style="padding: 0.5rem 0.2rem; width: 22px;">ល.រ</th>
+                    <th style="padding: 0.5rem 0.2rem; text-align: left;">ឈ្មោះ (1-${half})</th>
+                    <th style="padding: 0.5rem 0.1rem; text-align: center; color: var(--primary);">ព្រឹក</th>
+                    ${!isSaturday ? `<th style="padding: 0.5rem 0.1rem; text-align: center; color: var(--secondary);">ល្ងាច</th>` : ''}
                   </tr>
                 </thead>
                 <tbody>${rowsPart1}</tbody>
@@ -659,10 +659,10 @@ class AttendanceApp {
               <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
                   <tr style="background: var(--bg-main);">
-                    <th style="padding: 0.75rem 0.5rem; width: 45px;">ល.រ</th>
-                    <th style="padding: 0.75rem 0.5rem; text-align: left;">ឈ្មោះសិស្ស (${half + 1}-${students.length})</th>
-                    <th style="padding: 0.75rem 0.5rem; text-align: center; color: var(--primary);">🌅 វេនព្រឹក (AM)</th>
-                    ${!isSaturday ? `<th style="padding: 0.75rem 0.5rem; text-align: center; color: var(--secondary);">🌇 វេនល្ងាច (PM)</th>` : ''}
+                    <th style="padding: 0.5rem 0.2rem; width: 22px;">ល.រ</th>
+                    <th style="padding: 0.5rem 0.2rem; text-align: left;">ឈ្មោះ (${half + 1}-${students.length})</th>
+                    <th style="padding: 0.5rem 0.1rem; text-align: center; color: var(--primary);">ព្រឹក</th>
+                    ${!isSaturday ? `<th style="padding: 0.5rem 0.1rem; text-align: center; color: var(--secondary);">ល្ងាច</th>` : ''}
                   </tr>
                 </thead>
                 <tbody>${rowsPart2}</tbody>

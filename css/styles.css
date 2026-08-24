@@ -706,7 +706,8 @@ body::before {
 /* 2-Column Split Tables Layout for Long Student Lists */
 .split-tables-wrapper {
   display: flex;
-  gap: 1.25rem;
+  flex-direction: row;
+  gap: 0.5rem;
   width: 100%;
   align-items: flex-start;
 }
@@ -718,8 +719,8 @@ body::before {
 
 @media (max-width: 900px) {
   .split-tables-wrapper {
-    flex-direction: column;
-    gap: 0.75rem;
+    flex-direction: row !important;
+    gap: 0.35rem !important;
   }
 }
 
