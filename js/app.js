@@ -575,6 +575,8 @@ class AttendanceApp {
         ${this.searchQuery
           ? `<span class="search-bar-result"><i class="lucide-filter" style="font-size:0.8rem;"></i> ស្វែងរករកឃើញ <strong>${filteredStudents.length}</strong> នាក់</span>`
           : `<span class="search-bar-hint"><i class="lucide-users" style="font-size:0.8rem;"></i> សិស្សសរុប <strong>${filteredStudents.length}</strong> នាក់</span>`
+        }
+
         <div class="toolbar-divider"></div>
 
         <div class="picker-buttons">
