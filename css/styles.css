@@ -2081,6 +2081,23 @@ body::before {
     display: none;
   }
 
+  /* Ensure topbar logo is always visible on mobile */
+  .topbar-logo {
+    display: flex !important;
+    width: 34px !important;
+    height: 34px !important;
+    flex-shrink: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .topbar-logo img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    border-radius: 50% !important;
+    display: block !important;
+  }
+
   /* Filter Header Bar on Mobile */
   .filter-header-bar {
     flex-direction: column;
