@@ -489,9 +489,9 @@ class AttendanceApp {
       const isToday = (d === this.cambodiaTime.day && this.data.activeMonth === this.cambodiaTime.month && this.data.activeYear === this.cambodiaTime.year);
       const colSpan = isSaturday ? 1 : 2;
 
-      return `<th colspan="${colSpan}" style="padding: 0.5rem; text-align: center; border-bottom: 1px solid var(--border-color); ${isSaturday ? 'background: rgba(245,158,11,0.08);' : ''} ${isToday ? 'background: rgba(5, 150, 105, 0.2) !important; color: var(--primary); font-weight:700;' : ''}">
-        <div>${KHMER_DAYS[dayOfWeekIndex]} ${isToday ? '★' : ''}</div>
-        <div style="font-size: 1rem; font-weight: 700;">${d}</div>
+      return `<th colspan="${colSpan}" class="day-header-cell ${isSaturday ? 'sat-cell' : ''} ${isToday ? 'today-cell' : ''}">
+        <div class="day-name">${KHMER_DAYS[dayOfWeekIndex]} ${isToday ? '★' : ''}</div>
+        <div class="day-num">${d}</div>
       </th>`;
     }).join('');
 
@@ -499,10 +499,10 @@ class AttendanceApp {
       const dateObj = new Date(this.data.activeYear, this.data.activeMonth - 1, d);
       const isSaturday = dateObj.getDay() === 6;
       if (isSaturday) {
-        return `<th style="font-size:0.7rem; color: var(--primary); background: var(--bg-main);">ព្រឹក</th>`;
+        return `<th class="shift-sub-header am-shift">ព្រឹក</th>`;
       }
-      return `<th style="font-size:0.7rem; color: var(--primary); background: var(--bg-main);">ព្រឹក</th>
-              <th style="font-size:0.7rem; color: var(--secondary); background: var(--bg-main);">ល្ងាច</th>`;
+      return `<th class="shift-sub-header am-shift">ព្រឹក</th>
+              <th class="shift-sub-header pm-shift">ល្ងាច</th>`;
     }).join('');
 
     let renderRow = (std, i) => {

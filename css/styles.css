@@ -1070,6 +1070,48 @@ body::before {
   z-index: 12 !important;
 }
 
+/* Day Header Cells */
+.day-header-cell {
+  padding: 0.35rem 0.2rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.day-header-cell.sat-cell {
+  background: rgba(245,158,11,0.08);
+}
+
+.day-header-cell.today-cell {
+  background: rgba(5, 150, 105, 0.2) !important;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.day-name {
+  font-size: 0.75rem;
+  line-height: 1.1;
+}
+
+.day-num {
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.shift-sub-header {
+  font-size: 0.68rem;
+  background: var(--bg-main);
+  padding: 0.2rem 0.1rem;
+}
+
+.shift-sub-header.am-shift {
+  color: var(--primary);
+}
+
+.shift-sub-header.pm-shift {
+  color: var(--secondary);
+}
+
 /* Weekend Columns */
 .th-weekend {
   background: rgba(239,68,68,0.06) !important;
@@ -2309,6 +2351,27 @@ body::before {
     font-size: 0.62rem !important;
     padding: 0.2rem 0.02rem !important;
     text-align: center !important;
+  }
+
+  /* Compact day headers on mobile */
+  .day-header-cell {
+    padding: 0.12rem 0.02rem !important;
+  }
+
+  .day-name {
+    font-size: 0.58rem !important;
+    line-height: 1.0 !important;
+  }
+
+  .day-num {
+    font-size: 0.68rem !important;
+    font-weight: 800 !important;
+    line-height: 1.0 !important;
+  }
+
+  .shift-sub-header {
+    font-size: 0.55rem !important;
+    padding: 0.1rem 0 !important;
   }
 }
 
