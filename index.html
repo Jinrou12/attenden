@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ប្រព័ន្ធស្រង់វត្តមានសិស្ស - Student Attendance System</title>
+
+  <!-- Google Fonts: Kantumruy Pro & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Kantumruy+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- SheetJS for Excel Import/Export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Mobile Hamburger Menu Button -->
+    <button class="mobile-menu-btn" id="btnMobileMenu" aria-label="Toggle Menu">
+      <i class="lucide-menu"></i>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="brand-header">
+          <div class="brand-logo">
+            <i class="lucide-calendar-check-2" style="font-size: 1.5rem;"></i>
+          </div>
+          <div>
+            <div class="brand-title">វត្តមានសិស្ស</div>
+            <div class="brand-subtitle">ប្រព័ន្ធស្រង់វត្តមាន (ច័ន្ទ-សៅរ៍ ១ ព្រឹក)</div>
+          </div>
+        </div>
+
+        <div class="section-title">បញ្ជីថ្នាក់រៀន (Classes)</div>
+        <ul class="nav-list" id="classListNav">
+          <!-- Dynamically filled by JS -->
+        </ul>
+
+        <button class="btn btn-secondary btn-sm" id="btnAddClass" style="width: 100%; margin-top: 0.75rem; justify-content: flex-start;">
+          <i class="lucide-plus"></i> បន្ថែមថ្នាក់រៀនថ្មី...
+        </button>
+      </div>
+
+      <!-- Sidebar Footer Tools -->
+      <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+        <button class="btn btn-secondary btn-sm" id="btnThemeToggle" style="justify-content: flex-start; color: var(--text-sidebar);">
+          <i class="lucide-moon"></i> ផ្លាស់ប្តូរ Theme (Dark/Light)
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btnResetSampleData" style="justify-content: flex-start; color: var(--status-a-text);">
+          <i class="lucide-refresh-cw"></i> កំណត់ Sample Data ឡើងវិញ
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+
+      <!-- Top Header Navigation -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="class-info-badge">
+            <h1 class="class-title" id="currentClassName">ថ្នាក់ទី ១០ A</h1>
+            <span class="class-meta" id="currentClassRoom">បន្ទប់ ២០១ | គ្រូបន្ទុក៖ លោកគ្រូ សុខ ចាន់ថា</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Cambodia Live Clock Indicator -->
+          <div class="cambodia-clock-badge" id="cambodiaClockDisplay">
+            <i class="lucide-clock" style="color: var(--primary);"></i> ម៉ោងកម្ពុជា៖ <strong>--:--:--</strong>
+          </div>
+
+          <!-- Month and Year Picker -->
+          <div class="date-selector-group">
+            <i class="lucide-calendar" style="color: var(--primary);"></i>
+            <select id="monthSelect">
+              <option value="1">មករា (Jan)</option>
+              <option value="2">កុម្ភៈ (Feb)</option>
+              <option value="3">មីនា (Mar)</option>
+              <option value="4">មេសា (Apr)</option>
+              <option value="5">ឧសភា (May)</option>
+              <option value="6">មិថុនា (Jun)</option>
+              <option value="7">កក្កដា (Jul)</option>
+              <option value="8" selected>សីហា (Aug)</option>
+              <option value="9">កញ្ញា (Sep)</option>
+              <option value="10">តុលា (Oct)</option>
+              <option value="11">វិច្ឆិកា (Nov)</option>
+              <option value="12">ធ្នូ (Dec)</option>
+            </select>
+
+            <select id="yearSelect">
+              <option value="2025">២០២៥</option>
+              <option value="2026" selected>២០២៦</option>
+              <option value="2027">២០២៧</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary" id="btnMarkAllPresentToday">
+            <i class="lucide-check-check"></i> វត្តមានទាំងអស់ថ្ងៃនេះ
+          </button>
+
+          <button class="btn btn-secondary" id="btnImportExcel">
+            <i class="lucide-file-spreadsheet"></i> Import Excel
+          </button>
+          <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display:none;" />
+
+          <button class="btn btn-secondary" id="btnExportCSV">
+            <i class="lucide-download"></i> Export CSV
+          </button>
+
+          <button class="btn btn-secondary" id="btnPrintReport">
+            <i class="lucide-printer"></i> បោះពុម្ព (Print)
+          </button>
+        </div>
+      </header>
+
+      <!-- Sub Tabs Navigation -->
+      <nav class="view-tabs">
+        <button class="tab-btn active" data-tab="weekly" id="tabWeekly">
+          <i class="lucide-calendar-range"></i> ស្រង់វត្តមាន ១ សប្តាហ៍ (Weekly Sheet)
+        </button>
+        <button class="tab-btn" data-tab="daily" id="tabDaily">
+          <i class="lucide-calendar-days"></i> ស្រង់វត្តមានប្រចាំថ្ងៃ (Daily View)
+        </button>
+        <button class="tab-btn" data-tab="roster" id="tabRoster">
+          <i class="lucide-users"></i> បញ្ជីឈ្មោះសិស្ស (Roster)
+        </button>
+        <button class="tab-btn" data-tab="analytics" id="tabAnalytics">
+          <i class="lucide-pie-chart"></i> ស្ថិតិ & របាយការណ៍ (Analytics)
+        </button>
+      </nav>
+
+      <!-- Scrollable Main Page Body -->
+      <div class="page-body">
+
+        <!-- Summary Statistics Cards -->
+        <section class="summary-cards-grid">
+          <div class="summary-card">
+            <div>
+              <div class="card-title">ចំនួនសិស្សសរុប</div>
+              <div class="card-value" id="totalStudentsCount">0</div>
+            </div>
+            <div class="card-icon-box icon-p"><i class="lucide-users"></i></div>
+          </div>
+
+          <div class="summary-card">
+            <div>
+              <div class="card-title">វត្តមានសរុប (Present)</div>
+              <div class="card-value" id="totalPresentCount" style="color: var(--status-p-text);">0</div>
+            </div>
+            <div class="card-icon-box icon-p"><i class="lucide-check-circle-2"></i></div>
+          </div>
+
+          <div class="summary-card">
+            <div>
+              <div class="card-title">អវត្តមាន / ច្បាប់សរុប</div>
+              <div class="card-value" id="totalAbsentCount" style="color: var(--status-a-text);">0</div>
+            </div>
+            <div class="card-icon-box icon-a"><i class="lucide-x-circle"></i></div>
+          </div>
+
+          <div class="summary-card">
+            <div>
+              <div class="card-title">ភាគរយវត្តមានសរុប</div>
+              <div class="card-value" id="totalAttendanceRate" style="color: var(--primary);">0%</div>
+            </div>
+            <div class="card-icon-box icon-p" style="background: var(--primary-light); color: var(--primary);"><i class="lucide-trending-up"></i></div>
+          </div>
+        </section>
+
+        <!-- View 1: Weekly Attendance 1-Week View (Default Active) -->
+        <section id="viewWeekly">
+          <!-- Dynamically filled by JS -->
+        </section>
+
+        <!-- View 2: Daily Quick View -->
+        <section id="viewDaily" style="display: none;">
+          <!-- Dynamically filled by JS -->
+        </section>
+
+        <!-- View 3: Student Roster View -->
+        <section id="viewRoster" style="display: none;">
+          <!-- Dynamically filled by JS -->
+        </section>
+
+        <!-- View 4: Analytics View -->
+        <section id="viewAnalytics" style="display: none;">
+          <!-- Dynamically filled by JS -->
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Printable Area -->
+  <div id="printReportArea"></div>
+
+  <!-- Excel Import Preview Modal -->
+  <div class="modal-overlay" id="excelModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="display:flex; align-items:center; gap:0.5rem;"><i class="lucide-file-spreadsheet" style="color:var(--primary);"></i> នាំចូលបញ្ជីឈ្មោះសិស្សពី Excel</h3>
+        <button class="modal-close-btn" id="btnCloseExcelModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:var(--bg-main); padding:1rem; border-radius:var(--radius-md); margin-bottom:1rem; font-size:0.88rem;">
+          <p style="margin-bottom:0.5rem;"><strong>💡 ណែនាំអំពីទម្រង់ File Excel (.xlsx / .csv):</strong></p>
+          <ul style="padding-left:1.25rem; color:var(--text-muted);">
+            <li>ក្បាលជួរឈរត្រូវមាន៖ <strong>ឈ្មោះសិស្ស (Name)</strong>, <strong>អត្តលេខ (Code)</strong>, <strong>ភេទ (Gender)</strong>, <strong>លេខទូរស័ព្ទ (Phone)</strong></li>
+            <li>ប្រព័ន្ធនឹងស្គាល់ក្បាលជួរឈរជាភាសាខ្មែរ និងអង់គ្លេសដោយស្វ័យប្រវត្ត</li>
+          </ul>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.75rem;">
+            <a href="Student_List_Grade12.xlsx" download="Student_List_Grade12.xlsx" class="btn btn-primary btn-sm" style="text-decoration:none;">
+              <i class="lucide-download"></i> ទាញយក File Excel ថ្នាក់ទី១២ (.xlsx)
+            </a>
+            <a href="Student_List_Grade12.csv" download="Student_List_Grade12.csv" class="btn btn-secondary btn-sm" style="text-decoration:none;">
+              <i class="lucide-download"></i> ទាញយក File CSV (.csv)
+            </a>
+          </div>
+        </div>
+
+        <div id="excelPreviewContainer" style="display:none;">
+          <div style="font-weight:700; margin-bottom:0.5rem; display:flex; justify-content:space-between; align-items:center;">
+            <span>បញ្ជីឈ្មោះសិស្សដែលបានរកឃើញ (<span id="parsedStudentCount">0</span> នាក់)</span>
+            <span style="font-size:0.8rem; color:var(--primary);" id="targetClassNameText"></span>
+          </div>
+          <div style="max-height: 250px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+            <table class="preview-table" style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+              <thead>
+                <tr style="background:var(--bg-main); position:sticky; top:0;">
+                  <th style="padding:0.5rem; text-align:left;">ល.រ</th>
+                  <th style="padding:0.5rem; text-align:left;">អត្តលេខ</th>
+                  <th style="padding:0.5rem; text-align:left;">ឈ្មោះសិស្ស</th>
+                  <th style="padding:0.5rem; text-align:left;">ភេទ</th>
+                  <th style="padding:0.5rem; text-align:left;">លេខទូរស័ព្ទ</th>
+                </tr>
+              </thead>
+              <tbody id="excelPreviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:0.75rem; padding-top:1rem; border-top:1px solid var(--border-color);">
+        <button class="btn btn-secondary" id="btnCancelExcel">បោះបង់</button>
+        <button class="btn btn-primary" id="btnConfirmExcelImport" disabled>
+          <i class="lucide-check"></i> បញ្ជាក់ការនាំចូល (Import)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="js/sampleData.js?v=25"></script>
+  <script src="js/app.js?v=25"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
