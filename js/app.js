@@ -961,13 +961,7 @@ class AttendanceApp {
         </button>
       </div>
 
-      <div class="charts-grid">
-        <div class="chart-card">
-          <h3 style="margin-bottom: 1rem; font-size: 1.1rem; font-weight: 700;">សរុបវត្តមានប្រចាំខែ ${KHMER_MONTHS[this.data.activeMonth - 1]} (ច័ន្ទ-សៅរ៍ ១ ព្រឹក)</h3>
-          <div style="max-width: 320px; margin: 0 auto;">
-            <canvas id="attendanceDoughnutChart"></canvas>
-          </div>
-        </div>
+      <div class="charts-grid" style="grid-template-columns: 1fr;">
         <div class="chart-card">
           <h3 style="margin-bottom: 1rem; font-size: 1.1rem; font-weight: 700;">អវត្តមាន</h3>
           <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
@@ -984,24 +978,6 @@ class AttendanceApp {
         </div>
       </div>
     `;
-
-    setTimeout(() => {
-      const ctx = document.getElementById('attendanceDoughnutChart');
-      if (ctx) {
-        if (this.chartInstance) this.chartInstance.destroy();
-        this.chartInstance = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: ['វត្តមាន (P)', 'អវត្តមាន (A)', 'ច្បាប់ (L)'],
-            datasets: [{
-              data: [p, a, l],
-              backgroundColor: ['#10b981', '#ef4444', '#f59e0b']
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: true }
-        });
-      }
-    }, 100);
   }
 
   clearStudentAbsences(studentId) {
