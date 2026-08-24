@@ -2240,6 +2240,31 @@ body::before {
     white-space: nowrap !important;
   }
 
+  /* Daily View Split Table specific column sizing (3 columns: Name, AM, PM) */
+  .split-tables-wrapper .weekly-attendance-table th:nth-child(1),
+  .split-tables-wrapper .weekly-attendance-table td:nth-child(1) {
+    width: 105px !important;
+    min-width: 105px !important;
+    max-width: 105px !important;
+    padding: 0.35rem 0.2rem !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .split-tables-wrapper .weekly-attendance-table th:nth-child(2),
+  .split-tables-wrapper .weekly-attendance-table td:nth-child(2),
+  .split-tables-wrapper .weekly-attendance-table th:nth-child(3),
+  .split-tables-wrapper .weekly-attendance-table td:nth-child(3) {
+    width: 32px !important;
+    min-width: 32px !important;
+    padding: 0.2rem 1px !important;
+    text-align: center !important;
+  }
+
   /* Status buttons inside weekly table on mobile */
   .weekly-attendance-table .status-cell-btn {
     width: 20px !important;
