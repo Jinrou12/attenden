@@ -464,21 +464,13 @@ class AttendanceApp {
               <th style="font-size:0.7rem; color: var(--secondary); background: var(--bg-main);">ល្ងាច</th>`;
     }).join('');
 
-    let rowsHtml = students.map((std, i) => {
-      let p = 0, a = 0, l = 0;
-
+    let renderRow = (std, i) => {
       let cells = weekDays.map(d => {
         const dateObj = new Date(this.data.activeYear, this.data.activeMonth - 1, d);
         const isSaturday = dateObj.getDay() === 6;
-
         const activeShifts = isSaturday ? ['AM'] : ['AM', 'PM'];
-
         return activeShifts.map(shift => {
           const status = this.getAttendanceRecord(std.id, d, shift);
-          if (status === 'P') p++;
-          if (status === 'A') a++;
-          if (status === 'L') l++;
-
           return `<td style="text-align: center; padding: 0.5rem 0.2rem; border-bottom: 1px solid var(--border-color);">
             <button class="status-cell-btn ${status}" onclick="app.onCellClick('${std.id}', ${d}, '${shift}')" style="width: 32px; height: 32px; font-size: 0.85rem;" title="${shift === 'AM' ? 'វេនព្រឹក' : 'វេនល្ងាច'}">
               ${status === 'NONE' ? '-' : status}
@@ -486,16 +478,74 @@ class AttendanceApp {
           </td>`;
         }).join('');
       }).join('');
-
-      const totalMarked = p + a + l;
-      const ratePct = totalMarked > 0 ? Math.round((p / totalMarked) * 100) : 100;
-
       return `<tr style="border-bottom: 1px solid var(--border-color);">
-        <td style="padding: 0.85rem 1rem; font-weight: 600;">${i + 1}</td>
-        <td style="padding: 0.85rem 1rem; font-weight: 700;">${std.name}</td>
+        <td style="padding: 0.65rem 0.5rem; font-weight: 600;">${i + 1}</td>
+        <td style="padding: 0.65rem 0.5rem; font-weight: 700;">${std.name}</td>
         ${cells}
       </tr>`;
-    }).join('');
+    };
+
+    let tableContentHtml = '';
+    if (students.length > 15) {
+      const half = Math.ceil(students.length / 2);
+      const part1 = students.slice(0, half);
+      const part2 = students.slice(half);
+      const rowsPart1 = part1.map((std, i) => renderRow(std, i)).join('');
+      const rowsPart2 = part2.map((std, i) => renderRow(std, i + half)).join('');
+      tableContentHtml = `
+        <div class="split-tables-wrapper">
+          <div class="split-table-col">
+            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
+              <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: var(--bg-main);">
+                    <th style="padding: 0.65rem 0.5rem; width: 40px;" rowspan="2">ល.រ</th>
+                    <th style="padding: 0.65rem 0.5rem; text-align: left;" rowspan="2">ឈ្មោះសិស្ស (1-${half})</th>
+                    ${headerDaysHtml}
+                  </tr>
+                  <tr>${subShiftHeaderHtml}</tr>
+                </thead>
+                <tbody>${rowsPart1}</tbody>
+              </table>
+            </div>
+          </div>
+          <div class="split-table-col">
+            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
+              <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: var(--bg-main);">
+                    <th style="padding: 0.65rem 0.5rem; width: 40px;" rowspan="2">ល.រ</th>
+                    <th style="padding: 0.65rem 0.5rem; text-align: left;" rowspan="2">ឈ្មោះសិស្ស (${half + 1}-${students.length})</th>
+                    ${headerDaysHtml}
+                  </tr>
+                  <tr>${subShiftHeaderHtml}</tr>
+                </thead>
+                <tbody>${rowsPart2}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      const rowsHtml = students.map((std, i) => renderRow(std, i)).join('');
+      tableContentHtml = `
+        <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
+          <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: var(--bg-main);">
+                <th style="padding: 0.75rem 0.5rem; width: 45px;" rowspan="2">ល.រ</th>
+                <th style="padding: 0.75rem 0.5rem; text-align: left; width: 180px;" rowspan="2">ឈ្មោះសិស្ស</th>
+                ${headerDaysHtml}
+              </tr>
+              <tr>${subShiftHeaderHtml}</tr>
+            </thead>
+            <tbody>
+              ${rowsHtml || '<tr><td colspan="20" style="padding: 2rem; text-align: center; color: var(--text-muted);">គ្មានសិស្ស</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
 
     this.elViewWeekly.innerHTML = `
       <div class="week-picker-box">
@@ -508,9 +558,7 @@ class AttendanceApp {
         </div>
       </div>
 
-      <!-- Combined Search + Status Picker Toolbar -->
       <div class="search-bar-toolbar">
-        <!-- Left: Search Input -->
         <div class="search-bar-inner">
           <i class="lucide-search search-bar-icon"></i>
           <input
@@ -527,12 +575,8 @@ class AttendanceApp {
         ${this.searchQuery
           ? `<span class="search-bar-result"><i class="lucide-filter" style="font-size:0.8rem;"></i> ស្វែងរករកឃើញ <strong>${filteredStudents.length}</strong> នាក់</span>`
           : `<span class="search-bar-hint"><i class="lucide-users" style="font-size:0.8rem;"></i> សិស្សសរុប <strong>${filteredStudents.length}</strong> នាក់</span>`
-        }
-
-        <!-- Divider -->
         <div class="toolbar-divider"></div>
 
-        <!-- Right: Status Picker Buttons -->
         <div class="picker-buttons">
           <button class="picker-btn status-p ${this.activeSelectedStatus === 'P' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('P')"><span class="dot-badge green"></span> P</button>
           <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A</button>
@@ -542,21 +586,7 @@ class AttendanceApp {
         </div>
       </div>
 
-      <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
-        <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr style="background: var(--bg-main);">
-              <th style="padding: 0.75rem 0.5rem; width: 45px;" rowspan="2">ល.រ</th>
-              <th style="padding: 0.75rem 0.5rem; text-align: left; width: 180px;" rowspan="2">ឈ្មោះសិស្ស</th>
-              ${headerDaysHtml}
-            </tr>
-            <tr>${subShiftHeaderHtml}</tr>
-          </thead>
-          <tbody>
-            ${rowsHtml || '<tr><td colspan="20" style="padding: 2rem; text-align: center; color: var(--text-muted);">គ្មានសិស្ស</td></tr>'}
-          </tbody>
-        </table>
-      </div>
+      ${tableContentHtml}
     `;
 
     const weeklySelect = document.getElementById('weeklySelect');
@@ -615,27 +645,93 @@ class AttendanceApp {
     const selectedDateObj = new Date(this.data.activeYear, this.data.activeMonth - 1, this.selectedDailyDate);
     const isSaturday = selectedDateObj.getDay() === 6;
 
-    let rowsHtml = students.map((std, i) => {
+    let renderRow = (std, i) => {
       const statusAM = this.getAttendanceRecord(std.id, this.selectedDailyDate, 'AM');
       const statusPM = this.getAttendanceRecord(std.id, this.selectedDailyDate, 'PM');
 
       return `<tr style="border-bottom: 1px solid var(--border-color);">
-        <td style="padding: 0.85rem 1rem; font-weight: 600;">${i + 1}</td>
-        <td style="padding: 0.85rem 1rem; font-weight: 700;">${std.name}</td>
-        <td style="text-align: center; padding: 0.5rem;">
+        <td style="padding: 0.65rem 0.5rem; font-weight: 600;">${i + 1}</td>
+        <td style="padding: 0.65rem 0.5rem; font-weight: 700;">${std.name}</td>
+        <td style="text-align: center; padding: 0.4rem;">
           <button class="status-cell-btn ${statusAM}" onclick="app.onDailyCellClick('${std.id}', 'AM')" style="width: 38px; height: 38px; font-size: 0.95rem; font-weight: 700;" title="វេនព្រឹក">
             ${statusAM === 'NONE' ? '-' : statusAM}
           </button>
         </td>
         ${!isSaturday ? `
-          <td style="text-align: center; padding: 0.5rem;">
+          <td style="text-align: center; padding: 0.4rem;">
             <button class="status-cell-btn ${statusPM}" onclick="app.onDailyCellClick('${std.id}', 'PM')" style="width: 38px; height: 38px; font-size: 0.95rem; font-weight: 700;" title="វេនល្ងាច">
               ${statusPM === 'NONE' ? '-' : statusPM}
             </button>
           </td>
         ` : ''}
       </tr>`;
-    }).join('');
+    };
+
+    let tableContentHtml = '';
+
+    if (students.length > 15) {
+      const half = Math.ceil(students.length / 2);
+      const part1 = students.slice(0, half);
+      const part2 = students.slice(half);
+
+      const rowsPart1 = part1.map((std, i) => renderRow(std, i)).join('');
+      const rowsPart2 = part2.map((std, i) => renderRow(std, i + half)).join('');
+
+      tableContentHtml = `
+        <div class="split-tables-wrapper">
+          <div class="split-table-col">
+            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
+              <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: var(--bg-main);">
+                    <th style="padding: 0.75rem 0.5rem; width: 45px;">ល.រ</th>
+                    <th style="padding: 0.75rem 0.5rem; text-align: left;">ឈ្មោះសិស្ស (1-${half})</th>
+                    <th style="padding: 0.75rem 0.5rem; text-align: center; color: var(--primary);">🌅 វេនព្រឹក (AM)</th>
+                    ${!isSaturday ? `<th style="padding: 0.75rem 0.5rem; text-align: center; color: var(--secondary);">🌇 វេនល្ងាច (PM)</th>` : ''}
+                  </tr>
+                </thead>
+                <tbody>${rowsPart1}</tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="split-table-col">
+            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
+              <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: var(--bg-main);">
+                    <th style="padding: 0.75rem 0.5rem; width: 45px;">ល.រ</th>
+                    <th style="padding: 0.75rem 0.5rem; text-align: left;">ឈ្មោះសិស្ស (${half + 1}-${students.length})</th>
+                    <th style="padding: 0.75rem 0.5rem; text-align: center; color: var(--primary);">🌅 វេនព្រឹក (AM)</th>
+                    ${!isSaturday ? `<th style="padding: 0.75rem 0.5rem; text-align: center; color: var(--secondary);">🌇 វេនល្ងាច (PM)</th>` : ''}
+                  </tr>
+                </thead>
+                <tbody>${rowsPart2}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      const rowsHtml = students.map((std, i) => renderRow(std, i)).join('');
+      tableContentHtml = `
+        <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
+          <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: var(--bg-main);">
+                <th style="padding: 0.75rem 0.5rem; width: 45px;">ល.រ</th>
+                <th style="padding: 0.75rem 1rem; text-align: left; width: 240px;">ឈ្មោះសិស្ស</th>
+                <th style="padding: 0.75rem 1rem; text-align: center; color: var(--primary);">🌅 វេនព្រឹក (AM)</th>
+                ${!isSaturday ? `<th style="padding: 0.75rem 1rem; text-align: center; color: var(--secondary);">🌇 វេនល្ងាច (PM)</th>` : ''}
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml || '<tr><td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-muted);">គ្មានសិស្ស</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
 
     this.elViewDaily.innerHTML = `
       <div class="week-picker-box">
@@ -678,20 +774,7 @@ class AttendanceApp {
         </div>
       </div>
 
-      <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
-        <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr style="background: var(--bg-main);">
-              <th style="padding: 0.75rem 0.5rem; width: 45px;">ល.រ</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; width: 240px;">ឈ្មោះសិស្ស</th>
-              <th style="padding: 0.75rem 1rem; text-align: center; color: var(--primary);">🌅 វេនព្រឹក (AM)</th>
-              ${!isSaturday ? `<th style="padding: 0.75rem 1rem; text-align: center; color: var(--secondary);">🌇 វេនល្ងាច (PM)</th>` : ''}
-          </thead>
-          <tbody>
-            ${rowsHtml || '<tr><td colspan="8" style="padding: 2rem; text-align: center; color: var(--text-muted);">គ្មានសិស្ស</td></tr>'}
-          </tbody>
-        </table>
-      </div>
+      ${tableContentHtml}
     `;
 
     const dailyDateSelect = document.getElementById('dailyDateSelect');
