@@ -534,11 +534,11 @@ class AttendanceApp {
 
         <!-- Right: Status Picker Buttons -->
         <div class="picker-buttons">
-          <button class="picker-btn status-p ${this.activeSelectedStatus === 'P' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('P')"><span class="dot-badge green"></span> P (វត្តមាន)</button>
-          <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A (អវត្តមាន)</button>
-          <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L (ច្បាប់)</button>
+          <button class="picker-btn status-p ${this.activeSelectedStatus === 'P' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('P')"><span class="dot-badge green"></span> P</button>
+          <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A</button>
+          <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L</button>
           <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> -</button>
-          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> ផ្លាស់ប្តូរ</button>
+          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> ↻</button>
         </div>
       </div>
 
@@ -670,11 +670,11 @@ class AttendanceApp {
         <div class="toolbar-divider"></div>
 
         <div class="picker-buttons">
-          <button class="picker-btn status-p ${this.activeSelectedStatus === 'P' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('P')"><span class="dot-badge green"></span> P (វត្តមាន)</button>
-          <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A (អវត្តមាន)</button>
-          <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L (ច្បាប់)</button>
+          <button class="picker-btn status-p ${this.activeSelectedStatus === 'P' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('P')"><span class="dot-badge green"></span> P</button>
+          <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A</button>
+          <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L</button>
           <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> -</button>
-          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> ផ្លាស់ប្តូរ</button>
+          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> ↻</button>
         </div>
       </div>
 
