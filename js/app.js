@@ -89,15 +89,19 @@ class AttendanceApp {
         const parsed = JSON.parse(saved);
         if (parsed.classes && parsed.classes.length > 0 && parsed.students && parsed.students.length > 0) {
           parsed.activeShift = 'ALL';
-          if (!parsed.classes.some(c => c.id === 'cls_12_chun_nath')) {
+          const mainClsIndex = parsed.classes.findIndex(c => c.id === 'cls_12_chun_nath');
+          if (mainClsIndex !== -1) {
+            parsed.classes[mainClsIndex].name = DEFAULT_SAMPLE_DATA.classes[0].name;
+          } else {
             parsed.classes.unshift(DEFAULT_SAMPLE_DATA.classes[0]);
           }
-          // Always update Grade 12 students with exact names from F:\១.xlsx
+          // Always update students for main class
           const nonG12Students = parsed.students.filter(s => s.classId !== 'cls_12_chun_nath');
           const g12Students = DEFAULT_SAMPLE_DATA.students.filter(s => s.classId === 'cls_12_chun_nath');
           parsed.students = [...g12Students, ...nonG12Students];
 
           parsed.activeClassId = 'cls_12_chun_nath';
+          localStorage.setItem('TEACHER_ATTENDANCE_DATA', JSON.stringify(parsed));
           return parsed;
         }
       } catch (e) {
