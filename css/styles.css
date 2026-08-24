@@ -708,7 +708,7 @@ body::before {
 /* ============================================================ */
 .summary-cards-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
@@ -759,12 +759,11 @@ body::before {
 .summary-card:hover::before { opacity: 1; }
 
 .card-title {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-family: var(--font-latin);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  font-family: 'Kantumruy Pro', var(--font-khmer), system-ui, sans-serif;
 }
 
 .card-value {
@@ -776,9 +775,19 @@ body::before {
   line-height: 1;
 }
 
-[data-theme="dark"] .card-value {
-  color: #f1f5f9 !important;
-  text-shadow: 0 0 20px rgba(16,185,129,0.2);
+.card-total .card-value {
+  color: #34d399 !important;
+  text-shadow: 0 0 16px rgba(52,211,153,0.35);
+}
+
+.card-present .card-value {
+  color: #38bdf8 !important;
+  text-shadow: 0 0 16px rgba(56,189,248,0.35);
+}
+
+.card-absent .card-value {
+  color: #fb7185 !important;
+  text-shadow: 0 0 16px rgba(251,113,133,0.35);
 }
 
 .card-icon-box {
@@ -2087,19 +2096,19 @@ body::before {
     flex-shrink: 0;
   }
 
-  /* Summary Cards on Mobile: 1 Row with 4 Columns */
+  /* Summary Cards on Mobile: 1 Row with 3 Columns */
   .page-body {
     padding: 0.75rem;
     gap: 0.75rem;
   }
 
   .summary-cards-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.3rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
   }
 
   .summary-card {
-    padding: 0.5rem 0.2rem;
+    padding: 0.6rem 0.3rem;
     border-radius: var(--r-md);
     flex-direction: column;
     align-items: center;
@@ -2119,8 +2128,9 @@ body::before {
   }
 
   .card-title {
-    font-size: 0.72rem;
-    font-weight: 600;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: 'Kantumruy Pro', var(--font-khmer), system-ui, sans-serif;
     line-height: 1.1;
     white-space: nowrap;
     overflow: hidden;
@@ -2129,7 +2139,7 @@ body::before {
   }
 
   .card-value {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     font-weight: 800;
     line-height: 1.2;
     text-align: center;
