@@ -22,7 +22,23 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <!-- Logo data (loaded early so base64 src is available immediately) -->
-  <script src="js/logoData.js?v=27"></script>
+  <script src="js/logoData.js?v=28"></script>
+  <script>
+    /* Inject logo as CSS background-image — most reliable cross-device method */
+    (function() {
+      if (!window.APP_LOGO) return;
+      var s = document.createElement('style');
+      s.id = 'logo-bg-style';
+      s.textContent =
+        '.brand-logo, .topbar-logo {' +
+        '  background-image: url("' + window.APP_LOGO + '") !important;' +
+        '  background-size: contain !important;' +
+        '  background-repeat: no-repeat !important;' +
+        '  background-position: center center !important;' +
+        '}';
+      document.head.appendChild(s);
+    })();
+  </script>
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
@@ -38,9 +54,7 @@
     <aside class="sidebar">
       <div>
         <div class="brand-header">
-          <div class="brand-logo">
-            <img id="sidebarLogoImg" src="./img/logo.png" onerror="if(window.APP_LOGO)this.src=window.APP_LOGO;" onload="" alt="Logo" />
-          </div>
+          <div class="brand-logo"></div>
           <div>
             <div class="brand-title">វត្តមានសិស្ស</div>
             <div class="brand-subtitle">ប្រព័ន្ធស្រង់វត្តមាន (ច័ន្ទ-សៅរ៍ ១ ព្រឹក)</div>
@@ -82,9 +96,7 @@
             <i class="lucide-menu"></i>
           </button>
           <!-- Topbar School Seal Logo -->
-          <div class="topbar-logo">
-            <img id="topbarLogoImg" src="./img/logo.png" onerror="if(window.APP_LOGO)this.src=window.APP_LOGO;" alt="Logo" />
-          </div>
+          <div class="topbar-logo"></div>
           <div class="class-info-badge">
             <h1 class="class-title" id="currentClassName">ថ្នាក់ទី ១០ A</h1>
             <span class="class-meta" id="currentClassRoom">បន្ទប់ ២០១ | គ្រូបន្ទុក៖ លោកគ្រូ សុខ ចាន់ថា</span>
@@ -276,17 +288,8 @@
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script>
-    // Apply base64 logo — logoData.js already loaded in <head>
-    if (window.APP_LOGO) {
-      ['sidebarLogoImg', 'topbarLogoImg'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.src = window.APP_LOGO;
-      });
-    }
-  </script>
-  <script src="js/sampleData.js?v=27"></script>
-  <script src="js/app.js?v=27"></script>
+  <script src="js/sampleData.js?v=28"></script>
+  <script src="js/app.js?v=28"></script>
   <script>
     lucide.createIcons();
   </script>
