@@ -2177,11 +2177,6 @@ body::before {
     justify-content: center;
     text-align: center;
   }
-    padding: 0.45rem 0.1rem;
-    font-size: 0.75rem;
-    justify-content: center;
-    text-align: center;
-  }
 
   .search-bar-toolbar .picker-btn .dot-badge {
     display: none;
@@ -2198,24 +2193,27 @@ body::before {
     padding: 0.2rem 0.02rem !important;
   }
 
-  /* Index column */
+  /* Index column - aligned right right beside student name */
   .weekly-attendance-table th:nth-child(1),
   .weekly-attendance-table td:nth-child(1) {
-    width: 22px !important;
-    min-width: 22px !important;
-    padding: 0.2rem 0.05rem !important;
-    font-size: 0.7rem !important;
-    text-align: center !important;
+    width: 16px !important;
+    min-width: 16px !important;
+    padding: 0.2rem 1px 0.2rem 0 !important;
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    text-align: right !important;
   }
 
-  /* Student name column */
+  /* Student name column - aligned left right beside index number */
   .weekly-attendance-table th:nth-child(2),
   .weekly-attendance-table td:nth-child(2) {
-    width: 85px !important;
-    min-width: 85px !important;
-    max-width: 85px !important;
-    padding: 0.2rem 0.1rem !important;
-    font-size: 0.72rem !important;
+    width: 95px !important;
+    min-width: 95px !important;
+    max-width: 95px !important;
+    padding: 0.2rem 0 0.2rem 3px !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    text-align: left !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;

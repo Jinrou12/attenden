@@ -679,10 +679,10 @@ class AttendanceApp {
       </div>
 
       <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
-        <table style="width: 100%; border-collapse: collapse;">
+        <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
           <thead>
             <tr style="background: var(--bg-main);">
-              <th style="padding: 0.75rem 1rem; width: 50px;">ល.រ</th>
+              <th style="padding: 0.75rem 0.5rem; width: 45px;">ល.រ</th>
               <th style="padding: 0.75rem 1rem; text-align: left; width: 240px;">ឈ្មោះសិស្ស</th>
               <th style="padding: 0.75rem 1rem; text-align: center; color: var(--primary);">🌅 វេនព្រឹក (AM)</th>
               ${!isSaturday ? `<th style="padding: 0.75rem 1rem; text-align: center; color: var(--secondary);">🌇 វេនល្ងាច (PM)</th>` : ''}
