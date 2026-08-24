@@ -512,14 +512,6 @@ class AttendanceApp {
             ${weekOptions}
           </select>
         </div>
-        <div class="filter-header-right">
-          <button class="btn btn-secondary btn-sm" onclick="app.openAddStudentModal()">
-            <i class="lucide-user-plus"></i> បន្ថែមសិស្ស
-          </button>
-          <button class="btn btn-primary btn-sm" onclick="app.markAllPresentWeek(${currentWeek.start}, ${currentWeek.end})">
-            <i class="lucide-check-circle"></i> វត្តមានទាំងអស់សប្តាហ៍នេះ
-          </button>
-        </div>
       </div>
 
       <!-- Combined Search + Status Picker Toolbar -->
