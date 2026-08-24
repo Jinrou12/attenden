@@ -517,7 +517,7 @@ class AttendanceApp {
             type="text"
             id="weeklySearchInput"
             class="search-bar-input"
-            placeholder="ស្វែរកឈ្មោះសិស្ស... (Search student name)"
+            placeholder="ស្វែងរកឈ្មោះសិស្ស..."
             value="${this.searchQuery}"
             oninput="app.setSearch(this.value)"
             autocomplete="off"
@@ -538,7 +538,7 @@ class AttendanceApp {
           <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A (អវត្តមាន)</button>
           <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L (ច្បាប់)</button>
           <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> -</button>
-          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> Cycle</button>
+          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> ផ្លាស់ប្តូរ</button>
         </div>
       </div>
 
@@ -655,7 +655,7 @@ class AttendanceApp {
             type="text"
             id="dailySearchInput"
             class="search-bar-input"
-            placeholder="ស្វែរកឈ្មោះសិស្ស... (Search student name)"
+            placeholder="ស្វែងរកឈ្មោះសិស្ស..."
             value="${this.searchQuery}"
             oninput="app.setSearch(this.value)"
             autocomplete="off"
@@ -674,7 +674,7 @@ class AttendanceApp {
           <button class="picker-btn status-a ${this.activeSelectedStatus === 'A' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('A')"><span class="dot-badge red"></span> A (អវត្តមាន)</button>
           <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L (ច្បាប់)</button>
           <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> -</button>
-          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> Cycle</button>
+          <button class="picker-btn status-cycle ${this.activeSelectedStatus === 'CYCLE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('CYCLE')"><i class="lucide-refresh-cw"></i> ផ្លាស់ប្តូរ</button>
         </div>
       </div>
 
@@ -757,7 +757,7 @@ class AttendanceApp {
         <h3 style="font-size: 1.1rem; font-weight: 700;">បញ្ជីឈ្មោះសិស្សក្នុង ${this.getCurrentClass().name} (${students.length} នាក់)</h3>
         <div style="display: flex; gap: 0.75rem;">
           <button class="btn btn-secondary btn-sm" onclick="app.triggerExcelImport()">
-            <i class="lucide-file-spreadsheet"></i> Import Excel (.xlsx)
+            <i class="lucide-file-spreadsheet"></i> នាំចូល Excel (.xlsx)
           </button>
           <button class="btn btn-primary btn-sm" onclick="app.openAddStudentModal()">
             <i class="lucide-plus"></i> បន្ថែមសិស្សថ្មី

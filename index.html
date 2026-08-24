@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="ប្រព័ន្ធស្រង់វត្តមានសិស្ស - ប្រព័ន្ធស្រង់វត្តមានប្រចាំខែ សម្រាប់គ្រូបង្រៀន">
   <meta name="theme-color" content="#10b981">
-  <title>វត្តមានសិស្ស · Student Attendance System</title>
+  <title>វត្តមានសិស្ស</title>
 
   <!-- Google Fonts: Kantumruy Pro & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,7 +44,7 @@
           </div>
         </div>
 
-        <div class="section-title">បញ្ជីថ្នាក់រៀន (Classes)</div>
+        <div class="section-title">បញ្ជីថ្នាក់រៀន</div>
         <ul class="nav-list" id="classListNav">
           <!-- Dynamically filled by JS -->
         </ul>
@@ -57,10 +57,10 @@
       <!-- Sidebar Footer Tools -->
       <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
         <button class="btn btn-secondary btn-sm" id="btnThemeToggle" style="justify-content: flex-start; color: var(--text-sidebar);">
-          <i class="lucide-moon"></i> ផ្លាស់ប្តូរ Theme (Dark/Light)
+          <i class="lucide-moon"></i> ផ្លាស់ប្តូរ Theme
         </button>
         <button class="btn btn-secondary btn-sm" id="btnResetSampleData" style="justify-content: flex-start; color: var(--status-a-text);">
-          <i class="lucide-refresh-cw"></i> កំណត់ Sample Data ឡើងវិញ
+          <i class="lucide-refresh-cw"></i> កំណត់ទិន្នន័យគំរូឡើងវិញ
         </button>
       </div>
     </aside>
@@ -118,12 +118,12 @@
           </button>
 
           <div class="topbar-actions">
-            <button class="icon-btn" id="btnImportExcel" data-tooltip="Import Excel">
+            <button class="icon-btn" id="btnImportExcel" data-tooltip="នាំចូល Excel">
               <i class="lucide-file-spreadsheet"></i>
             </button>
             <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display:none;" />
 
-            <button class="icon-btn" id="btnExportCSV" data-tooltip="Export CSV">
+            <button class="icon-btn" id="btnExportCSV" data-tooltip="នាំចេញ CSV">
               <i class="lucide-download"></i>
             </button>
 
@@ -137,16 +137,16 @@
       <!-- Sub Tabs Navigation -->
       <nav class="view-tabs">
         <button class="tab-btn active" data-tab="weekly" id="tabWeekly">
-          <i class="lucide-calendar-range"></i> ស្រង់វត្តមាន ១ សប្តាហ៍ (Weekly Sheet)
+          <i class="lucide-calendar-range"></i> ស្រង់វត្តមាន ១ សប្តាហ៍
         </button>
         <button class="tab-btn" data-tab="daily" id="tabDaily">
-          <i class="lucide-calendar-days"></i> ស្រង់វត្តមានប្រចាំថ្ងៃ (Daily View)
+          <i class="lucide-calendar-days"></i> ស្រង់វត្តមានប្រចាំថ្ងៃ
         </button>
         <button class="tab-btn" data-tab="roster" id="tabRoster">
-          <i class="lucide-users"></i> បញ្ជីឈ្មោះសិស្ស (Roster)
+          <i class="lucide-users"></i> បញ្ជីឈ្មោះសិស្ស
         </button>
         <button class="tab-btn" data-tab="analytics" id="tabAnalytics">
-          <i class="lucide-pie-chart"></i> ស្ថិតិ & របាយការណ៍ (Analytics)
+          <i class="lucide-pie-chart"></i> ស្ថិតិ & របាយការណ៍
         </button>
       </nav>
 
@@ -165,7 +165,7 @@
 
           <div class="summary-card">
             <div>
-              <div class="card-title">វត្តមានសរុប (Present)</div>
+              <div class="card-title">វត្តមានសរុប</div>
               <div class="card-value" id="totalPresentCount" style="color: var(--status-p-text);">0</div>
             </div>
             <div class="card-icon-box icon-p"><i class="lucide-check-circle-2"></i></div>
