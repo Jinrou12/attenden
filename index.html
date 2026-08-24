@@ -80,55 +80,58 @@
             <h1 class="class-title" id="currentClassName">ថ្នាក់ទី ១០ A</h1>
             <span class="class-meta" id="currentClassRoom">បន្ទប់ ២០១ | គ្រូបន្ទុក៖ លោកគ្រូ សុខ ចាន់ថា</span>
           </div>
-        </div>
 
-        <div class="topbar-right">
-          <!-- Cambodia Live Clock Indicator -->
-          <div class="cambodia-clock-badge" id="cambodiaClockDisplay">
-            <i class="lucide-clock" style="color: var(--primary);"></i> ម៉ោងកម្ពុជា៖ <strong>--:--:--</strong>
-          </div>
-
-          <!-- Month and Year Picker -->
+          <!-- Date Selector Group (moved left, compact) -->
           <div class="date-selector-group">
             <i class="lucide-calendar" style="color: var(--primary);"></i>
             <select id="monthSelect">
-              <option value="1">មករា (Jan)</option>
-              <option value="2">កុម្ភៈ (Feb)</option>
-              <option value="3">មីនា (Mar)</option>
-              <option value="4">មេសា (Apr)</option>
-              <option value="5">ឧសភា (May)</option>
-              <option value="6">មិថុនា (Jun)</option>
-              <option value="7">កក្កដា (Jul)</option>
-              <option value="8" selected>សីហា (Aug)</option>
-              <option value="9">កញ្ញា (Sep)</option>
-              <option value="10">តុលា (Oct)</option>
-              <option value="11">វិច្ឆិកា (Nov)</option>
-              <option value="12">ធ្នូ (Dec)</option>
+              <option value="1">មករា</option>
+              <option value="2">កុម្ភៈ</option>
+              <option value="3">មីនា</option>
+              <option value="4">មេសា</option>
+              <option value="5">ឧសភា</option>
+              <option value="6">មិថុនា</option>
+              <option value="7">កក្កដា</option>
+              <option value="8" selected>សីហា</option>
+              <option value="9">កញ្ញា</option>
+              <option value="10">តុលា</option>
+              <option value="11">វិច្ឆិកា</option>
+              <option value="12">ធ្នូ</option>
             </select>
-
+            <span class="date-sep">/</span>
             <select id="yearSelect">
-              <option value="2025">២០២៥</option>
-              <option value="2026" selected>២០២៦</option>
-              <option value="2027">២០២៧</option>
+              <option value="2025">2025</option>
+              <option value="2026" selected>2026</option>
+              <option value="2027">2027</option>
             </select>
           </div>
 
-          <button class="btn btn-primary" id="btnMarkAllPresentToday">
-            <i class="lucide-check-check"></i> វត្តមានទាំងអស់ថ្ងៃនេះ
+          <!-- Cambodia Live Clock Indicator (compact) -->
+          <div class="cambodia-clock-badge" id="cambodiaClockDisplay">
+            <i class="lucide-clock"></i> <strong>--:--:--</strong>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="btn btn-primary btn-sm" id="btnMarkAllPresentToday">
+            <i class="lucide-check-check"></i>
+            <span class="btn-label">វត្តមានទាំងអស់</span>
           </button>
 
-          <button class="btn btn-secondary" id="btnImportExcel">
-            <i class="lucide-file-spreadsheet"></i> Import Excel
-          </button>
-          <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display:none;" />
+          <div class="topbar-actions">
+            <button class="icon-btn" id="btnImportExcel" data-tooltip="Import Excel">
+              <i class="lucide-file-spreadsheet"></i>
+            </button>
+            <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display:none;" />
 
-          <button class="btn btn-secondary" id="btnExportCSV">
-            <i class="lucide-download"></i> Export CSV
-          </button>
+            <button class="icon-btn" id="btnExportCSV" data-tooltip="Export CSV">
+              <i class="lucide-download"></i>
+            </button>
 
-          <button class="btn btn-secondary" id="btnPrintReport">
-            <i class="lucide-printer"></i> បោះពុម្ព (Print)
-          </button>
+            <button class="icon-btn" id="btnPrintReport" data-tooltip="បោះពុម្ព">
+              <i class="lucide-printer"></i>
+            </button>
+          </div>
         </div>
       </header>
 
