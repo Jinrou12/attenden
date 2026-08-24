@@ -505,11 +505,13 @@ class AttendanceApp {
     }).join('');
 
     this.elViewWeekly.innerHTML = `
-      <div class="filter-header-bar">
-        <div class="filter-header-left" style="width: 100%;">
-          <select id="weeklySelect" class="form-control" style="font-weight: 700; width: 100%;">
+      <div class="week-picker-box">
+        <div class="week-picker-inner">
+          <i class="lucide-calendar-days week-picker-icon"></i>
+          <select id="weeklySelect" class="week-picker-select">
             ${weekOptions}
           </select>
+          <i class="lucide-chevron-down week-picker-arrow"></i>
         </div>
       </div>
 
@@ -668,17 +670,13 @@ class AttendanceApp {
     }).join('');
 
     this.elViewDaily.innerHTML = `
-      <div class="filter-header-bar">
-        <div class="filter-header-left">
-          <h3 style="font-size: 1.1rem; font-weight: 700; white-space: nowrap;">ស្រង់វត្តមានប្រចាំថ្ងៃ</h3>
-          <select id="dailyDateSelect" class="form-control" style="font-weight: 600; width: 260px;">
+      <div class="week-picker-box">
+        <div class="week-picker-inner">
+          <i class="lucide-calendar week-picker-icon"></i>
+          <select id="dailyDateSelect" class="week-picker-select">
             ${optionsHtml}
           </select>
-        </div>
-        <div class="filter-header-right">
-          <button class="btn btn-primary btn-sm" onclick="app.markAllPresentDaily(${this.selectedDailyDate})">
-            <i class="lucide-check-circle"></i> វត្តមានទាំងអស់ថ្ងៃនេះ
-          </button>
+          <i class="lucide-chevron-down week-picker-arrow"></i>
         </div>
       </div>
 
