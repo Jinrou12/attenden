@@ -2147,40 +2147,57 @@ body::before {
     display: none;
   }
 
-  /* Table Sticky Student Name Column */
-  .table-responsive-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  /* Ultra-compact mobile table to fit all 6 days on screen */
+  .weekly-attendance-table {
+    table-layout: fixed !important;
+    width: 100% !important;
   }
 
-  table th:nth-child(1),
-  table td:nth-child(1) {
-    position: sticky;
-    left: 0;
-    z-index: 3;
-    background: var(--bg-card);
+  .weekly-attendance-table th,
+  .weekly-attendance-table td {
+    padding: 0.2rem 0.02rem !important;
   }
 
-  table th:nth-child(2),
-  table td:nth-child(2) {
-    position: sticky;
-    left: 45px;
-    z-index: 3;
-    background: var(--bg-card);
-    box-shadow: 2px 0 6px rgba(0,0,0,0.1);
+  /* Index column */
+  .weekly-attendance-table th:nth-child(1),
+  .weekly-attendance-table td:nth-child(1) {
+    width: 22px !important;
+    min-width: 22px !important;
+    padding: 0.2rem 0.05rem !important;
+    font-size: 0.7rem !important;
+    text-align: center !important;
   }
 
-  [data-theme="dark"] table th:nth-child(1),
-  [data-theme="dark"] table td:nth-child(1),
-  [data-theme="dark"] table th:nth-child(2),
-  [data-theme="dark"] table td:nth-child(2) {
-    background: #16243d;
+  /* Student name column */
+  .weekly-attendance-table th:nth-child(2),
+  .weekly-attendance-table td:nth-child(2) {
+    width: 85px !important;
+    min-width: 85px !important;
+    max-width: 85px !important;
+    padding: 0.2rem 0.1rem !important;
+    font-size: 0.72rem !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
 
-  .status-cell-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 0.85rem;
+  /* Status buttons inside weekly table on mobile */
+  .weekly-attendance-table .status-cell-btn {
+    width: 20px !important;
+    height: 22px !important;
+    font-size: 0.65rem !important;
+    border-radius: 4px !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+  }
+
+  /* Summary columns P, A, L, % */
+  .weekly-attendance-table .summary-col {
+    width: 15px !important;
+    min-width: 15px !important;
+    font-size: 0.62rem !important;
+    padding: 0.2rem 0.02rem !important;
+    text-align: center !important;
   }
 }
 

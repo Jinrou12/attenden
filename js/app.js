@@ -547,16 +547,16 @@ class AttendanceApp {
       </div>
 
       <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
-        <table style="width: 100%; border-collapse: collapse;">
+        <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
           <thead>
             <tr style="background: var(--bg-main);">
-              <th style="padding: 0.75rem 1rem; width: 50px;" rowspan="2">ល.រ</th>
-              <th style="padding: 0.75rem 1rem; text-align: left; width: 200px;" rowspan="2">ឈ្មោះសិស្ស</th>
+              <th style="padding: 0.75rem 0.5rem; width: 45px;" rowspan="2">ល.រ</th>
+              <th style="padding: 0.75rem 0.5rem; text-align: left; width: 180px;" rowspan="2">ឈ្មោះសិស្ស</th>
               ${headerDaysHtml}
-              <th style="padding: 0.75rem 0.5rem; text-align: center;" rowspan="2">P</th>
-              <th style="padding: 0.75rem 0.5rem; text-align: center;" rowspan="2">A</th>
-              <th style="padding: 0.75rem 0.5rem; text-align: center;" rowspan="2">L</th>
-              <th style="padding: 0.75rem 0.5rem; text-align: center;" rowspan="2">ភាគរយ</th>
+              <th class="summary-col" style="padding: 0.75rem 0.3rem; text-align: center;" rowspan="2">P</th>
+              <th class="summary-col" style="padding: 0.75rem 0.3rem; text-align: center;" rowspan="2">A</th>
+              <th class="summary-col" style="padding: 0.75rem 0.3rem; text-align: center;" rowspan="2">L</th>
+              <th class="summary-col" style="padding: 0.75rem 0.3rem; text-align: center;" rowspan="2">%</th>
             </tr>
             <tr>${subShiftHeaderHtml}</tr>
           </thead>
