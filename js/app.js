@@ -1019,17 +1019,144 @@ class AttendanceApp {
   }
 
   downloadAnalyticsAsJPEG() {
-    const analyticsArea = document.getElementById('viewAnalytics');
-    if (!analyticsArea) return;
+    const cls = this.getCurrentClass();
+    const ct = this.getCambodiaTime();
 
-    const safeFileName = `Analytics_Report_Grade12_${this.data.activeMonth}_${this.data.activeYear}.jpg`;
+    // Khmer date info
+    const khmerMonths = ['មករា','កុម្ភៈ','មីនា','មេសា','ឧសភា','មិថុនា',
+      'កក្កដា','សីហា','កញ្ញា','តុលា','វិច្ឆិកា','ធ្នូ'];
+    const khmerDays = ['អាទិត្យ','ច័ន្ទ','អង្គារ','ពុធ','ព្រហស្បតិ៍','សុក្រ','សៅរ៍'];
+    const now = new Date();
+    const dayName = khmerDays[now.getDay()];
+    const dayNum  = now.getDate();
+    const monthName = khmerMonths[now.getMonth()];
+    const year = now.getFullYear();
+    const hour = now.getHours();
+    const minuteStr = String(now.getMinutes()).padStart(2, '0');
+    const session = hour < 12 ? 'វេនព្រឹក (AM)' : 'វេនល្ងាច (PM)';
+    const timeStr = `${hour}:${minuteStr}`;
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+
+    // Build absent list HTML
+    const absentItems = this.getLowAttendanceStudents();
+    const absentListHtml = absentItems.length === 0
+      ? `<p style="color:#94a3b8; font-size:0.95rem; padding: 1rem 0;">គ្មានសិស្សអវត្តមាន ឬ សុំច្បាប់ទេ! 👍</p>`
+      : absentItems.map((item, i) => `
+          <div style="
+            display:flex; align-items:center; justify-content:space-between;
+            padding: 0.85rem 1.1rem;
+            background:${isDark ? '#1a2d4a' : '#f1f5f9'};
+            border-radius: 10px;
+            margin-bottom: 0.6rem;
+            border: 1px solid ${isDark ? 'rgba(148,163,184,0.12)' : '#e2e8f0'};
+          ">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <span style="
+                width:28px; height:28px; border-radius:50%;
+                background:${isDark ? '#0f2744' : '#cbd5e1'};
+                display:flex; align-items:center; justify-content:center;
+                font-size:0.78rem; font-weight:700; color:${isDark ? '#94a3b8':'#475569'};
+              ">${i + 1}</span>
+              <span style="font-size:1rem; font-weight:700; color:${isDark ? '#f1f5f9':'#0f172a'};">${item.student.name}</span>
+            </div>
+            <div style="display:flex; gap:0.4rem;">
+              ${item.absentCount > 0 ? `<span style="
+                width:34px; height:34px; border-radius:8px;
+                background:rgba(239,68,68,0.15); color:#ef4444;
+                border: 1.5px solid rgba(239,68,68,0.4);
+                display:inline-flex; align-items:center; justify-content:center;
+                font-size:0.9rem; font-weight:800;
+              ">A</span>` : ''}
+              ${item.leaveCount > 0 ? `<span style="
+                width:34px; height:34px; border-radius:8px;
+                background:rgba(245,158,11,0.15); color:#f59e0b;
+                border: 1.5px solid rgba(245,158,11,0.4);
+                display:inline-flex; align-items:center; justify-content:center;
+                font-size:0.9rem; font-weight:800;
+              ">L</span>` : ''}
+            </div>
+          </div>
+        `).join('');
+
+    // Create the off-screen card for capture
+    const card = document.createElement('div');
+    card.style.cssText = `
+      position: fixed; top: -9999px; left: -9999px;
+      width: 520px;
+      background: ${isDark ? '#0f2744' : '#ffffff'};
+      border-radius: 16px;
+      padding: 28px;
+      font-family: 'Kantumruy Pro', 'Noto Sans Khmer', sans-serif;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      border: 1px solid ${isDark ? 'rgba(148,163,184,0.15)' : '#e2e8f0'};
+    `;
+    card.innerHTML = `
+      <!-- Gradient top accent -->
+      <div style="height:4px; border-radius:4px; background:linear-gradient(90deg,#10b981,#6366f1); margin-bottom:22px;"></div>
+
+      <!-- Header: Class + School info -->
+      <div style="margin-bottom: 18px;">
+        <div style="font-size:1.3rem; font-weight:800; color:${isDark?'#f1f5f9':'#0f172a'}; line-height:1.3;">${cls ? cls.name : 'ថ្នាក់'}</div>
+        <div style="font-size:0.82rem; color:${isDark?'#94a3b8':'#64748b'}; margin-top:2px;">${cls ? (cls.room || '') : ''}</div>
+      </div>
+
+      <!-- Date + Session badge row -->
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+        <div style="
+          display:inline-flex; align-items:center; gap:8px;
+          background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25);
+          border-radius:50px; padding: 7px 16px;
+        ">
+          <span style="font-size:1rem;">📅</span>
+          <span style="font-size:0.9rem; font-weight:700; color:#10b981;">
+            ${dayName} ថ្ងៃទី ${dayNum} ${monthName} ${year}
+          </span>
+        </div>
+        <div style="
+          display:inline-flex; align-items:center; gap:8px;
+          background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.25);
+          border-radius:50px; padding: 7px 16px;
+        ">
+          <span style="font-size:1rem;">${hour < 12 ? '🌅' : '🌇'}</span>
+          <span style="font-size:0.9rem; font-weight:700; color:#818cf8;">${session} · ${timeStr}</span>
+        </div>
+      </div>
+
+      <!-- Section title -->
+      <div style="
+        font-size:1.05rem; font-weight:700;
+        color:${isDark?'#f1f5f9':'#0f172a'};
+        margin-bottom: 14px;
+        display:flex; align-items:center; gap:8px;
+      ">
+        <span style="font-size:1.1rem;">🔴</span> បញ្ជីអវត្តមាន
+        <span style="
+          background:rgba(239,68,68,0.15); color:#ef4444;
+          border-radius:50px; padding:2px 10px; font-size:0.78rem; font-weight:800;
+        ">${absentItems.length} នាក់</span>
+      </div>
+
+      <!-- Absent list -->
+      <div>${absentListHtml}</div>
+
+      <!-- Footer watermark -->
+      <div style="margin-top:20px; padding-top:14px; border-top:1px solid ${isDark?'rgba(148,163,184,0.1)':'#e2e8f0'}; text-align:right;">
+        <span style="font-size:0.72rem; color:${isDark?'#475569':'#94a3b8'};">📋 Student Attendance System</span>
+      </div>
+    `;
+
+    document.body.appendChild(card);
+
+    const safeFileName = `Absent_${cls ? cls.name.replace(/\s+/g,'_') : 'Class'}_${dayNum}_${now.getMonth()+1}_${year}_${hour < 12 ? 'AM' : 'PM'}.jpg`;
 
     if (typeof html2canvas !== 'undefined') {
-      html2canvas(analyticsArea, {
-        scale: 2,
+      html2canvas(card, {
+        scale: 2.5,
         useCORS: true,
-        backgroundColor: document.body.getAttribute('data-theme') === 'dark' ? '#0f172a' : '#f8fafc'
+        backgroundColor: isDark ? '#0f2744' : '#ffffff',
+        logging: false
       }).then(canvas => {
+        document.body.removeChild(card);
         canvas.toBlob((blob) => {
           if (!blob) return;
           const url = URL.createObjectURL(blob);
@@ -1040,12 +1167,14 @@ class AttendanceApp {
           a.click();
           document.body.removeChild(a);
           setTimeout(() => URL.revokeObjectURL(url), 1000);
-        }, 'image/jpeg', 0.95);
+        }, 'image/jpeg', 0.97);
       }).catch(err => {
+        document.body.removeChild(card);
         console.error("html2canvas export error:", err);
         this.fallbackChartExport();
       });
     } else {
+      document.body.removeChild(card);
       this.fallbackChartExport();
     }
   }
