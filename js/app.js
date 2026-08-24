@@ -12,6 +12,11 @@ const KHMER_MONTHS = [
   "មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា",
   "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"
 ];
+const KHMER_DIGITS = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '៨', '៩'];
+
+function toKhmerNum(num) {
+  return String(num).split('').map(d => KHMER_DIGITS[d] || d).join('');
+}
 
 class AttendanceApp {
   constructor() {
@@ -479,7 +484,7 @@ class AttendanceApp {
         }).join('');
       }).join('');
       return `<tr style="border-bottom: 1px solid var(--border-color);">
-        <td style="padding: 0.65rem 0.5rem; font-weight: 600;">${i + 1}</td>
+        <td style="padding: 0.65rem 0.5rem; font-weight: 600;">${toKhmerNum(i + 1)}.</td>
         <td style="padding: 0.65rem 0.5rem; font-weight: 700;">${std.name}</td>
         ${cells}
       </tr>`;
@@ -609,7 +614,7 @@ class AttendanceApp {
       const statusPM = this.getAttendanceRecord(std.id, this.selectedDailyDate, 'PM');
 
       return `<tr style="border-bottom: 1px solid var(--border-color);">
-        <td style="padding: 0.65rem 0.5rem; font-weight: 600;">${i + 1}</td>
+        <td style="padding: 0.65rem 0.5rem; font-weight: 600;">${toKhmerNum(i + 1)}.</td>
         <td style="padding: 0.65rem 0.5rem; font-weight: 700;">${std.name}</td>
         <td style="text-align: center; padding: 0.4rem;">
           <button class="status-cell-btn ${statusAM}" onclick="app.onDailyCellClick('${std.id}', 'AM')" style="width: 38px; height: 38px; font-size: 0.95rem; font-weight: 700;" title="វេនព្រឹក">
@@ -644,7 +649,7 @@ class AttendanceApp {
                 <thead>
                   <tr style="background: rgba(16, 185, 129, 0.08);">
                     <th style="padding: 0.4rem 0.1rem; width: 16px; font-size: 0.68rem;">ល.រ</th>
-                    <th style="padding: 0.4rem 0.2rem; text-align: left; font-size: 0.72rem; color: #34d399; font-weight: 800;">1-${half}</th>
+                    <th style="padding: 0.4rem 0.2rem; text-align: left; font-size: 0.72rem; color: #34d399; font-weight: 800;">ឈ្មោះសិស្ស</th>
                     <th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--primary); font-size: 0.68rem; font-weight: 800;">AM</th>
                     ${!isSaturday ? `<th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--secondary); font-size: 0.68rem; font-weight: 800;">PM</th>` : ''}
                   </tr>
@@ -660,7 +665,7 @@ class AttendanceApp {
                 <thead>
                   <tr style="background: rgba(56, 189, 248, 0.08);">
                     <th style="padding: 0.4rem 0.1rem; width: 16px; font-size: 0.68rem;">ល.រ</th>
-                    <th style="padding: 0.4rem 0.2rem; text-align: left; font-size: 0.72rem; color: #38bdf8; font-weight: 800;">${half + 1}-${students.length}</th>
+                    <th style="padding: 0.4rem 0.2rem; text-align: left; font-size: 0.72rem; color: #38bdf8; font-weight: 800;">ឈ្មោះសិស្ស</th>
                     <th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--primary); font-size: 0.68rem; font-weight: 800;">AM</th>
                     ${!isSaturday ? `<th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--secondary); font-size: 0.68rem; font-weight: 800;">PM</th>` : ''}
                   </tr>
