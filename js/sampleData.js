@@ -11,7 +11,7 @@ const DEFAULT_SAMPLE_DATA = {
     {
       id: "cls_12_chun_nath",
       name: "ថ្នាក់ទី១១ (ព.វ.ជ.ណ)",
-      room: "បន្ទប់ ៤០៤",
+      room: "",
       teacher: "លោក អ៊ុច ពិសិដ្ឋ",
       subject: "មធ្យមសិក្សាទុតិយភូមិ",
       shift: "ច័ន្ទ-សៅរ៍ (សៅរ៍ ១ ព្រឹក)",

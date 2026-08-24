@@ -92,6 +92,7 @@ class AttendanceApp {
           const mainClsIndex = parsed.classes.findIndex(c => c.id === 'cls_12_chun_nath');
           if (mainClsIndex !== -1) {
             parsed.classes[mainClsIndex].name = DEFAULT_SAMPLE_DATA.classes[0].name;
+            parsed.classes[mainClsIndex].room = "";
           } else {
             parsed.classes.unshift(DEFAULT_SAMPLE_DATA.classes[0]);
           }
@@ -1101,7 +1102,7 @@ class AttendanceApp {
       <!-- Header: Class + School info -->
       <div style="margin-bottom: 18px;">
         <div style="font-size:1.3rem; font-weight:800; color:${isDark?'#f1f5f9':'#0f172a'}; line-height:1.3;">${cls ? cls.name : 'ថ្នាក់'}</div>
-        <div style="font-size:0.82rem; color:${isDark?'#94a3b8':'#64748b'}; margin-top:2px;">${cls ? (cls.room || '') : ''}</div>
+        ${cls && cls.room ? `<div style="font-size:0.82rem; color:${isDark?'#94a3b8':'#64748b'}; margin-top:2px;">${cls.room}</div>` : ''}
       </div>
 
       <!-- Date + Session badge row -->
