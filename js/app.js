@@ -31,6 +31,8 @@ class AttendanceApp {
     this.chartInstance = null;
     this.pendingExcelStudents = [];
     this.activeSelectedStatus = 'P';
+    this.dailyShift = this.cambodiaTime.isMorning ? 'AM' : 'PM';
+    this.dailyShiftUserOverridden = false;
 
     this.initElements();
     this.initLogos();
@@ -626,6 +628,84 @@ class AttendanceApp {
     }
   }
 
+  getHourlyAttendanceRecord(studentId, day, shift, hour) {
+    const key = this.getAttendanceKey(shift);
+    if (!this.data.attendance[key]) return 'NONE';
+    const hourlyKey = `${studentId}_${day}_H${hour}`;
+    if (this.data.attendance[key][hourlyKey] !== undefined) {
+      return this.data.attendance[key][hourlyKey];
+    }
+    const legacyStatus = this.getAttendanceRecord(studentId, day, shift);
+    return legacyStatus;
+  }
+
+  setHourlyAttendanceRecord(studentId, day, shift, hour, status) {
+    const key = this.getAttendanceKey(shift);
+    if (!this.data.attendance[key]) {
+      this.data.attendance[key] = {};
+    }
+    const hourlyKey = `${studentId}_${day}_H${hour}`;
+    this.data.attendance[key][hourlyKey] = status;
+
+    const maxHours = (shift === 'AM') ? 3 : 4;
+    const hourStatuses = [];
+    for (let h = 1; h <= maxHours; h++) {
+      hourStatuses.push(this.getHourlyAttendanceRecord(studentId, day, shift, h));
+    }
+
+    let shiftAggregate = 'NONE';
+    if (hourStatuses.every(s => s === 'P')) {
+      shiftAggregate = 'P';
+    } else if (hourStatuses.some(s => s === 'A')) {
+      shiftAggregate = 'A';
+    } else if (hourStatuses.some(s => s === 'L')) {
+      shiftAggregate = 'L';
+    } else if (hourStatuses.some(s => s === 'P')) {
+      shiftAggregate = 'P';
+    } else {
+      shiftAggregate = 'NONE';
+    }
+
+    this.data.attendance[key][`${studentId}_${day}`] = shiftAggregate;
+    this.saveData();
+  }
+
+  onHourlyCellClick(studentId, shift, hour) {
+    const current = this.getHourlyAttendanceRecord(studentId, this.selectedDailyDate, shift, hour);
+    let newStatus = 'NONE';
+    if (this.activeSelectedStatus === 'CYCLE') {
+      const order = ['NONE', 'P', 'A', 'L'];
+      const nextIdx = (order.indexOf(current) + 1) % order.length;
+      newStatus = order[nextIdx];
+    } else {
+      newStatus = (current === this.activeSelectedStatus) ? 'NONE' : this.activeSelectedStatus;
+    }
+    this.setHourlyAttendanceRecord(studentId, this.selectedDailyDate, shift, hour, newStatus);
+    this.renderSummaryCards();
+    this.renderDailyView();
+  }
+
+  setDailyShift(shift) {
+    this.dailyShift = shift;
+    this.dailyShiftUserOverridden = true;
+    this.renderDailyView();
+  }
+
+  markAllPresentActiveDailyShift() {
+    const students = this.getClassStudents();
+    const day = this.selectedDailyDate;
+    const shift = this.dailyShift;
+    const maxHours = (shift === 'AM') ? 3 : 4;
+
+    students.forEach(std => {
+      for (let h = 1; h <= maxHours; h++) {
+        this.setHourlyAttendanceRecord(std.id, day, shift, h, 'P');
+      }
+    });
+    this.render();
+    if (this.activeTab === 'daily') this.renderDailyView();
+  }
+
   renderDailyView() {
     const allStudents = this.getClassStudents();
     const filteredStudents = this.searchQuery
@@ -634,6 +714,24 @@ class AttendanceApp {
     const students = filteredStudents;
     const daysCount = this.getDaysInActiveMonth();
     
+    // Smart auto-detect current session unless manually overridden
+    const liveTime = this.getCambodiaTime();
+    const isLiveMorning = liveTime.isMorning;
+    const autoShiftText = isLiveMorning ? '🌅 វេនព្រឹក' : '🌇 វេនល្ងាច';
+
+    const selectedDateObj = new Date(this.data.activeYear, this.data.activeMonth - 1, this.selectedDailyDate);
+    const isSaturday = selectedDateObj.getDay() === 6;
+
+    if (isSaturday) {
+      this.dailyShift = 'AM';
+    } else if (!this.dailyShiftUserOverridden) {
+      this.dailyShift = isLiveMorning ? 'AM' : 'PM';
+    }
+
+    const currentShift = this.dailyShift;
+    const isAM = currentShift === 'AM';
+
+    // Date Options
     let optionsHtml = '';
     for(let d = 1; d <= daysCount; d++) {
       const dateObj = new Date(this.data.activeYear, this.data.activeMonth - 1, d);
@@ -642,27 +740,71 @@ class AttendanceApp {
       optionsHtml += `<option value="${d}" ${d === this.selectedDailyDate ? 'selected' : ''}>ថ្ងៃទី ${d} ${KHMER_MONTHS[this.data.activeMonth - 1]} (${KHMER_DAYS[dateObj.getDay()]}) ${isToday ? '(ថ្ងៃនេះ)' : ''}</option>`;
     }
 
-    const selectedDateObj = new Date(this.data.activeYear, this.data.activeMonth - 1, this.selectedDailyDate);
-    const isSaturday = selectedDateObj.getDay() === 6;
+    // Session Switcher Bar
+    const sessionSwitcherHtml = `
+      <div class="daily-shift-switcher">
+        <div class="daily-shift-tabs">
+          <button class="daily-shift-btn am ${isAM ? 'active' : ''}" onclick="app.setDailyShift('AM')">
+            🌅 វេនព្រឹក (៣ម៉ោង៖ ៧-៨, ៨-៩, ៩-១០)
+          </button>
+          ${!isSaturday ? `
+            <button class="daily-shift-btn pm ${!isAM ? 'active' : ''}" onclick="app.setDailyShift('PM')">
+              🌇 វេនល្ងាច (៤ម៉ោង៖ ១-២, ២-៣, ៣-៤, ៤-៥)
+            </button>
+          ` : `
+            <span style="font-size:0.75rem; color:var(--text-muted); padding:0.4rem 0.6rem; align-self:center;">(ថ្ងៃសៅរ៍រៀនតែ១ព្រឹក)</span>
+          `}
+        </div>
+
+        <div class="smart-auto-badge" title="ប្រព័ន្ធស្គាល់ម៉ោងកម្ពុជាជាក់ស្តែងដោយស្វ័យប្រវត្តិ">
+          <i class="lucide-sparkles"></i>
+          <span>ស្វ័យប្រវត្តិតាមម៉ោង៖ <strong>${autoShiftText}</strong></span>
+        </div>
+      </div>
+    `;
+
+    // Hours definition: AM = 3 hours (7-8, 8-9, 9-10), PM = 4 hours (1-2, 2-3, 3-4, 4-5)
+    const hours = isAM
+      ? [
+          { num: 1, label: "៧-៨" },
+          { num: 2, label: "៨-៩" },
+          { num: 3, label: "៩-១០" }
+        ]
+      : [
+          { num: 1, label: "១-២" },
+          { num: 2, label: "២-៣" },
+          { num: 3, label: "៣-៤" },
+          { num: 4, label: "៤-៥" }
+        ];
+
+    let headerThs = hours.map(h => 
+      `<th style="padding: 0.45rem 0.2rem; text-align: center; font-size: 0.72rem; font-weight: 800;">
+        <span class="hourly-th-badge ${isAM ? 'hourly-th-am' : 'hourly-th-pm'}">${h.label}</span>
+      </th>`
+    ).join('');
 
     let renderRow = (std, i) => {
-      const statusAM = this.getAttendanceRecord(std.id, this.selectedDailyDate, 'AM');
-      const statusPM = this.getAttendanceRecord(std.id, this.selectedDailyDate, 'PM');
+      let hourButtons = hours.map(h => {
+        const status = this.getHourlyAttendanceRecord(std.id, this.selectedDailyDate, currentShift, h.num);
+        return `<td style="text-align: center; padding: 0.35rem 0.15rem;">
+          <button class="status-cell-btn hourly-status-btn ${status}" onclick="app.onHourlyCellClick('${std.id}', '${currentShift}', ${h.num})" title="ម៉ោងទី${h.num} (${h.label})">
+            ${status === 'NONE' ? '-' : status}
+          </button>
+        </td>`;
+      }).join('');
+
+      const shiftStatus = this.getAttendanceRecord(std.id, this.selectedDailyDate, currentShift);
 
       return `<tr style="border-bottom: 1px solid var(--border-color);">
-        <td style="padding: 0.65rem 0.4rem; font-weight: 700; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${toKhmerNum(i + 1)}. ${std.name}</td>
-        <td style="text-align: center; padding: 0.4rem;">
-          <button class="status-cell-btn ${statusAM}" onclick="app.onDailyCellClick('${std.id}', 'AM')" style="width: 38px; height: 38px; font-size: 0.95rem; font-weight: 700;" title="វេនព្រឹក">
-            ${statusAM === 'NONE' ? '-' : statusAM}
-          </button>
+        <td style="padding: 0.55rem 0.4rem; font-weight: 700; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.85rem;">
+          ${toKhmerNum(i + 1)}. ${std.name}
         </td>
-        ${!isSaturday ? `
-          <td style="text-align: center; padding: 0.4rem;">
-            <button class="status-cell-btn ${statusPM}" onclick="app.onDailyCellClick('${std.id}', 'PM')" style="width: 38px; height: 38px; font-size: 0.95rem; font-weight: 700;" title="វេនល្ងាច">
-              ${statusPM === 'NONE' ? '-' : statusPM}
-            </button>
-          </td>
-        ` : ''}
+        ${hourButtons}
+        <td style="text-align: center; padding: 0.35rem 0.2rem;">
+          <span class="status-cell-btn ${shiftStatus}" style="width: 28px; height: 28px; font-size: 0.75rem; cursor: default; display: inline-flex;" title="សរុបវេន">
+            ${shiftStatus === 'NONE' ? '-' : shiftStatus}
+          </span>
+        </td>
       </tr>`;
     };
 
@@ -676,16 +818,20 @@ class AttendanceApp {
       const rowsPart1 = part1.map((std, i) => renderRow(std, i)).join('');
       const rowsPart2 = part2.map((std, i) => renderRow(std, i + half)).join('');
 
+      const thColor = isAM ? '#34d399' : '#38bdf8';
+      const bgOpacity = isAM ? 'rgba(16, 185, 129, 0.08)' : 'rgba(56, 189, 248, 0.08)';
+      const borderColor = isAM ? 'rgba(16, 185, 129, 0.25)' : 'rgba(56, 189, 248, 0.25)';
+
       tableContentHtml = `
         <div class="split-tables-wrapper">
           <div class="split-table-col split-table-col-1">
-            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid rgba(16, 185, 129, 0.25); overflow-x: auto; box-shadow: var(--shadow-sm);">
+            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid ${borderColor}; overflow-x: auto; box-shadow: var(--shadow-sm);">
               <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
-                  <tr style="background: rgba(16, 185, 129, 0.08);">
-                    <th style="padding: 0.4rem 0.4rem; text-align: left; font-size: 0.72rem; color: #34d399; font-weight: 800;">ឈ្មោះសិស្ស</th>
-                    <th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--primary); font-size: 0.68rem; font-weight: 800;">AM</th>
-                    ${!isSaturday ? `<th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--secondary); font-size: 0.68rem; font-weight: 800;">PM</th>` : ''}
+                  <tr style="background: ${bgOpacity};">
+                    <th style="padding: 0.4rem 0.4rem; text-align: left; font-size: 0.75rem; color: ${thColor}; font-weight: 800;">ឈ្មោះសិស្ស</th>
+                    ${headerThs}
+                    <th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--text-muted); font-size: 0.68rem; font-weight: 800;">សរុប</th>
                   </tr>
                 </thead>
                 <tbody>${rowsPart1}</tbody>
@@ -694,13 +840,13 @@ class AttendanceApp {
           </div>
 
           <div class="split-table-col split-table-col-2">
-            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid rgba(56, 189, 248, 0.25); overflow-x: auto; box-shadow: var(--shadow-sm);">
+            <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid ${borderColor}; overflow-x: auto; box-shadow: var(--shadow-sm);">
               <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
-                  <tr style="background: rgba(56, 189, 248, 0.08);">
-                    <th style="padding: 0.4rem 0.4rem; text-align: left; font-size: 0.72rem; color: #38bdf8; font-weight: 800;">ឈ្មោះសិស្ស</th>
-                    <th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--primary); font-size: 0.68rem; font-weight: 800;">AM</th>
-                    ${!isSaturday ? `<th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--secondary); font-size: 0.68rem; font-weight: 800;">PM</th>` : ''}
+                  <tr style="background: ${bgOpacity};">
+                    <th style="padding: 0.4rem 0.4rem; text-align: left; font-size: 0.75rem; color: ${thColor}; font-weight: 800;">ឈ្មោះសិស្ស</th>
+                    ${headerThs}
+                    <th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--text-muted); font-size: 0.68rem; font-weight: 800;">សរុប</th>
                   </tr>
                 </thead>
                 <tbody>${rowsPart2}</tbody>
@@ -717,12 +863,12 @@ class AttendanceApp {
             <thead>
               <tr style="background: var(--bg-main);">
                 <th style="padding: 0.45rem 0.5rem; text-align: left; font-size: 0.75rem; color: var(--text-main); font-weight: 800;">ឈ្មោះសិស្ស (${students.length} នាក់)</th>
-                <th style="padding: 0.45rem 0.1rem; text-align: center; color: var(--primary); font-size: 0.7rem; font-weight: 800;">AM</th>
-                ${!isSaturday ? `<th style="padding: 0.45rem 0.1rem; text-align: center; color: var(--secondary); font-size: 0.7rem; font-weight: 800;">PM</th>` : ''}
+                ${headerThs}
+                <th style="padding: 0.45rem 0.1rem; text-align: center; color: var(--text-muted); font-size: 0.7rem; font-weight: 800;">សរុប</th>
               </tr>
             </thead>
             <tbody>
-              ${rowsHtml || '<tr><td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-muted);">គ្មានសិស្ស</td></tr>'}
+              ${rowsHtml || '<tr><td colspan="10" style="padding: 2rem; text-align: center; color: var(--text-muted);">គ្មានសិស្ស</td></tr>'}
             </tbody>
           </table>
         </div>
@@ -739,6 +885,8 @@ class AttendanceApp {
           <i class="lucide-chevron-down week-picker-arrow"></i>
         </div>
       </div>
+
+      ${sessionSwitcherHtml}
 
       <div class="search-bar-toolbar">
         <div class="search-bar-inner">
@@ -767,6 +915,9 @@ class AttendanceApp {
           <button class="picker-btn status-l ${this.activeSelectedStatus === 'L' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('L')"><span class="dot-badge yellow"></span> L</button>
           <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> -</button>
           <button class="picker-btn status-cycle" onclick="app.clearAllActiveViewToNone()" title="លុបទៅជាប្រអបទទេទាំងអស់"><i class="lucide-refresh-cw"></i> ↻</button>
+          <button class="btn btn-primary btn-sm" onclick="app.markAllPresentActiveDailyShift()" title="ស្រង់ (P) គ្រប់ម៉ោងនៃវេននេះ">
+            <i class="lucide-check-check"></i> វត្តមាន ${isAM ? 'ព្រឹក' : 'ល្ងាច'} ទាំងអស់
+          </button>
         </div>
       </div>
 
