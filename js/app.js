@@ -963,7 +963,7 @@ class AttendanceApp {
           <button class="picker-btn status-none ${this.activeSelectedStatus === 'NONE' ? 'selected' : ''}" onclick="app.setActiveSelectedStatus('NONE')"><span class="dot-badge gray"></span> -</button>
           <button class="picker-btn status-cycle" onclick="app.clearAllActiveViewToNone()" title="លុបទៅជាប្រអបទទេទាំងអស់"><i class="lucide-refresh-cw"></i> ↻</button>
           <button class="btn btn-primary btn-sm" onclick="app.markAllPresentActiveDailyShift()" title="ស្រង់ (P) គ្រប់ម៉ោងនៃវេននេះ">
-            <i class="lucide-check-check"></i> វត្តមាន ${isAM ? 'ព្រឹក' : 'ល្ងាច'} ទាំងអស់
+            <i class="lucide-check-check"></i> វត្តមាន ទាំងអស់
           </button>
         </div>
       </div>
