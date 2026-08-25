@@ -990,17 +990,24 @@ class AttendanceApp {
   }
 
   onDailyCellClick(studentId, shift = 'AM') {
+    const key = this.getAttendanceKey(shift);
+    if (!this.data.attendance[key]) {
+      this.data.attendance[key] = {};
+    }
+    const current = this.getAttendanceRecord(studentId, this.selectedDailyDate, shift);
+    let newStatus = 'NONE';
+
     if (this.activeSelectedStatus === 'CYCLE') {
-      const current = this.getAttendanceRecord(studentId, this.selectedDailyDate, shift);
       const order = ['NONE', 'P', 'A', 'L'];
       const nextIdx = (order.indexOf(current) + 1) % order.length;
-      const nextStatus = order[nextIdx];
-      this.setAttendanceRecord(studentId, this.selectedDailyDate, nextStatus, shift);
+      newStatus = order[nextIdx];
     } else {
-      const current = this.getAttendanceRecord(studentId, this.selectedDailyDate, shift);
-      const newStatus = (current === this.activeSelectedStatus) ? 'NONE' : this.activeSelectedStatus;
-      this.setAttendanceRecord(studentId, this.selectedDailyDate, newStatus, shift);
+      newStatus = (current === this.activeSelectedStatus) ? 'NONE' : this.activeSelectedStatus;
     }
+
+    // Update shift summary status directly without wiping individual hour entries (H1..H4 preserved!)
+    this.data.attendance[key][`${studentId}_${this.selectedDailyDate}`] = newStatus;
+    this.saveData();
     this.renderSummaryCards();
     this.renderDailyView();
   }
