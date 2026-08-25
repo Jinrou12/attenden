@@ -1211,10 +1211,15 @@ class AttendanceApp {
         badgeHtml = `<span class="badge-full-absence morning"><i class="lucide-sun"></i> អវត្តមាន ១ ព្រឹកពេញ</span>`;
       } else if (detail.isFullEveningAbsent) {
         badgeHtml = `<span class="badge-full-absence evening"><i class="lucide-moon"></i> អវត្តមាន ១ ល្ងាចពេញ</span>`;
-      } else if (item.absentCount > 0) {
-        badgeHtml = `<span class="badge-full-absence partial"><i class="lucide-alert-circle"></i> អវត្តមាន ${item.absentCount} លើក</span>`;
-      } else if (item.leaveCount > 0) {
-        badgeHtml = `<span class="badge-full-absence leave"><i class="lucide-file-text"></i> ច្បាប់ ${item.leaveCount} លើក</span>`;
+      } else {
+        let badges = [];
+        if (item.absentCount > 0) {
+          badges.push(`<span class="status-cell-btn A" style="width: 32px; height: 32px; font-size: 0.85rem; font-weight: 700; cursor: default; display: inline-flex; align-items: center; justify-content: center;" title="អវត្តមាន ${item.absentCount} លើក">A</span>`);
+        }
+        if (item.leaveCount > 0) {
+          badges.push(`<span class="status-cell-btn L" style="width: 32px; height: 32px; font-size: 0.85rem; font-weight: 700; cursor: default; display: inline-flex; align-items: center; justify-content: center;" title="ច្បាប់ ${item.leaveCount} លើក">L</span>`);
+        }
+        badgeHtml = `<div style="display: flex; gap: 0.4rem; align-items: center;">${badges.join('')}</div>`;
       }
 
       let timeNotes = [];
@@ -1332,15 +1337,27 @@ class AttendanceApp {
     const absentListHtml = absentItems.length === 0
       ? `<p style="color:#94a3b8; font-size:0.95rem; padding: 1rem 0;">គ្មានសិស្សអវត្តមាន ឬ សុំច្បាប់ទេ! 👍</p>`
       : absentItems.map((item, i) => {
-          const detail = this.getStudentAbsenceDetail(item.student.id, this.selectedDailyDate);
-          let badgeText = item.absentCount > 0 ? `អវត្តមាន ${item.absentCount} លើក` : `ច្បាប់ ${item.leaveCount} លើក`;
-          if (detail.isFullDayAbsent) badgeText = 'អវត្តមាន ពេញមួយថ្ងៃ';
-          else if (detail.isFullMorningAbsent) badgeText = 'អវត្តមាន ១ ព្រឹកពេញ';
-          else if (detail.isFullEveningAbsent) badgeText = 'អវត្តមាន ១ ល្ងាចពេញ';
+          let badgeHtml = '';
+          if (detail.isFullDayAbsent) {
+            badgeHtml = `<span style="padding:0.3rem 0.75rem; border-radius:20px; background:rgba(239,68,68,0.15); color:#ef4444; border:1.5px solid rgba(239,68,68,0.4); display:inline-flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:800;">អវត្តមាន ពេញមួយថ្ងៃ</span>`;
+          } else if (detail.isFullMorningAbsent) {
+            badgeHtml = `<span style="padding:0.3rem 0.75rem; border-radius:20px; background:rgba(239,68,68,0.15); color:#ef4444; border:1.5px solid rgba(239,68,68,0.4); display:inline-flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:800;">អវត្តមាន ១ ព្រឹកពេញ</span>`;
+          } else if (detail.isFullEveningAbsent) {
+            badgeHtml = `<span style="padding:0.3rem 0.75rem; border-radius:20px; background:rgba(239,68,68,0.15); color:#ef4444; border:1.5px solid rgba(239,68,68,0.4); display:inline-flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:800;">អវត្តមាន ១ ល្ងាចពេញ</span>`;
+          } else {
+            let badges = [];
+            if (item.absentCount > 0) {
+              badges.push(`<span style="width:34px; height:34px; border-radius:8px; background:rgba(239,68,68,0.15); color:#ef4444; border:1.5px solid rgba(239,68,68,0.4); display:inline-flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:800;">A</span>`);
+            }
+            if (item.leaveCount > 0) {
+              badges.push(`<span style="width:34px; height:34px; border-radius:8px; background:rgba(245,158,11,0.15); color:#f59e0b; border:1.5px solid rgba(245,158,11,0.4); display:inline-flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:800;">L</span>`);
+            }
+            badgeHtml = `<div style="display:flex; gap:0.4rem;">${badges.join('')}</div>`;
+          }
 
           let timeNotes = [];
           if (detail.amNote) timeNotes.push(`🌅 ព្រឹក៖ ${detail.amNote}`);
-          if (detail.pmNote) timeNotes.push(`<ctrl42> ល្ងាច៖ ${detail.pmNote}`);
+          if (detail.pmNote) timeNotes.push(`🌇 ល្ងាច៖ ${detail.pmNote}`);
           let timeNoteText = timeNotes.join(' | ');
 
           return `
@@ -1365,13 +1382,7 @@ class AttendanceApp {
                 ${timeNoteText ? `<div style="font-size:0.8rem; color:#94a3b8; padding-left:2.4rem;">⏰ ${timeNoteText}</div>` : ''}
               </div>
               <div style="display:flex; gap:0.4rem; align-items:center;">
-                <span style="
-                  padding: 0.3rem 0.75rem; border-radius:20px;
-                  background:rgba(239,68,68,0.15); color:#ef4444;
-                  border: 1.5px solid rgba(239,68,68,0.4);
-                  display:inline-flex; align-items:center; justify-content:center;
-                  font-size:0.8rem; font-weight:800;
-                ">${badgeText}</span>
+                ${badgeHtml}
               </div>
             </div>
           `;
