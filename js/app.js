@@ -643,11 +643,7 @@ class AttendanceApp {
     const key = this.getAttendanceKey(shift);
     if (!this.data.attendance[key]) return 'NONE';
     const hourlyKey = `${studentId}_${day}_H${hour}`;
-    if (this.data.attendance[key][hourlyKey] !== undefined) {
-      return this.data.attendance[key][hourlyKey];
-    }
-    const legacyStatus = this.getAttendanceRecord(studentId, day, shift);
-    return legacyStatus;
+    return this.data.attendance[key][hourlyKey] || 'NONE';
   }
 
   setHourlyAttendanceRecord(studentId, day, shift, hour, status) {
