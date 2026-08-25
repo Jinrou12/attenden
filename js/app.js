@@ -1092,25 +1092,117 @@ class AttendanceApp {
     }
   }
 
+  getStudentAbsenceDetail(studentId, day = this.selectedDailyDate) {
+    const amHours = [1, 2, 3];
+    const pmHours = [1, 2, 3, 4];
+
+    const amStatuses = amHours.map(h => this.getHourlyAttendanceRecord(studentId, day, 'AM', h));
+    const pmStatuses = pmHours.map(h => this.getHourlyAttendanceRecord(studentId, day, 'PM', h));
+
+    const isFullMorningAbsent = amStatuses.every(s => s === 'A');
+    const isFullEveningAbsent = pmStatuses.every(s => s === 'A');
+    const isFullDayAbsent = isFullMorningAbsent && isFullEveningAbsent;
+
+    const isFullMorningLeave = amStatuses.every(s => s === 'L');
+    const isFullEveningLeave = pmStatuses.every(s => s === 'L');
+
+    // Morning arrival / departure time notes (7:00 - 10:00)
+    let amNote = '';
+    if (isFullMorningAbsent) {
+      amNote = 'អវត្តមាន ១ ព្រឹកពេញ (ម៉ោង ៧:០០ - ១០:០០)';
+    } else if (isFullMorningLeave) {
+      amNote = 'សុំច្បាប់ ១ ព្រឹកពេញ (ម៉ោង ៧:០០ - ១០:០០)';
+    } else {
+      let notes = [];
+      if (amStatuses[0] === 'A' && amStatuses[1] === 'P') {
+        notes.push('មកម៉ោង ៨:០០ (អវត្តមានម៉ោង ៧:០០-៨:០០)');
+      } else if (amStatuses[0] === 'A' && amStatuses[1] === 'A' && amStatuses[2] === 'P') {
+        notes.push('មកម៉ោង ៩:០០ (អវត្តមានម៉ោង ៧:០០-៩:០០)');
+      }
+
+      if (amStatuses[0] === 'P' && amStatuses[1] === 'P' && amStatuses[2] === 'A') {
+        notes.push('ទៅវិញម៉ោង ៩:០០ (អវត្តមានម៉ោង ៩:០០-១០:០០)');
+      } else if (amStatuses[0] === 'P' && amStatuses[1] === 'A' && amStatuses[2] === 'A') {
+        notes.push('ទៅវិញម៉ោង ៨:០០ (អវត្តមានម៉ោង ៨:០០-១០:០០)');
+      } else if (amStatuses[0] === 'P' && amStatuses[1] === 'A' && amStatuses[2] === 'P') {
+        notes.push('អវត្តមានម៉ោង ៨:០០ - ៩:០០');
+      }
+      amNote = notes.join(' | ');
+    }
+
+    // Evening arrival / departure time notes (1:00 - 5:00)
+    let pmNote = '';
+    if (isFullEveningAbsent) {
+      pmNote = 'អវត្តមាន ១ ល្ងាចពេញ (ម៉ោង ១:០០ - ៥:០០)';
+    } else if (isFullEveningLeave) {
+      pmNote = 'សុំច្បាប់ ១ ល្ងាចពេញ (ម៉ោង ១:០០ - ៥:០០)';
+    } else {
+      let notes = [];
+      if (pmStatuses[0] === 'A' && pmStatuses[1] === 'P') {
+        notes.push('មកម៉ោង ២:០០ (អវត្តមានម៉ោង ១:០០-២:០០)');
+      } else if (pmStatuses[0] === 'A' && pmStatuses[1] === 'A' && pmStatuses[2] === 'P') {
+        notes.push('មកម៉ោង ៣:០០ (អវត្តមានម៉ោង ១:០០-៣:០០)');
+      }
+
+      if (pmStatuses[0] === 'P' && pmStatuses[1] === 'P' && pmStatuses[2] === 'P' && pmStatuses[3] === 'A') {
+        notes.push('ទៅវិញម៉ោង ៤:០០ (អវត្តមានម៉ោង ៤:០០-៥:០០)');
+      } else if (pmStatuses[0] === 'P' && pmStatuses[1] === 'P' && pmStatuses[2] === 'A' && pmStatuses[3] === 'A') {
+        notes.push('ទៅវិញម៉ោង ៣:០០ (អវត្តមានម៉ោង ៣:០០-៥:០០)');
+      } else if (pmStatuses[0] === 'P' && pmStatuses[1] === 'A' && pmStatuses[2] === 'P' && pmStatuses[3] === 'P') {
+        notes.push('អវត្តមានម៉ោង ២:០០ - ៣:០០');
+      }
+      pmNote = notes.join(' | ');
+    }
+
+    return {
+      isFullDayAbsent,
+      isFullMorningAbsent,
+      isFullEveningAbsent,
+      isFullMorningLeave,
+      isFullEveningLeave,
+      amNote,
+      pmNote
+    };
+  }
+
   renderAnalyticsView() {
     const students = this.getClassStudents();
-    const schoolDays = this.getSchoolDaysInActiveMonth();
+    const lowAttendanceList = this.getLowAttendanceStudents();
 
-    let p = 0, a = 0, l = 0;
-    students.forEach(std => {
-      schoolDays.forEach(day => {
-        const dateObj = new Date(this.data.activeYear, this.data.activeMonth - 1, day);
-        const isSaturday = dateObj.getDay() === 6;
-        const shifts = isSaturday ? ['AM'] : ['AM', 'PM'];
+    const renderStudentCard = (item) => {
+      const detail = this.getStudentAbsenceDetail(item.student.id, this.selectedDailyDate);
+      
+      let badgeHtml = '';
+      if (detail.isFullDayAbsent) {
+        badgeHtml = `<span class="badge-full-absence day"><i class="lucide-x-circle"></i> អវត្តមាន ពេញមួយថ្ងៃ</span>`;
+      } else if (detail.isFullMorningAbsent) {
+        badgeHtml = `<span class="badge-full-absence morning"><i class="lucide-sun"></i> អវត្តមាន ១ ព្រឹកពេញ</span>`;
+      } else if (detail.isFullEveningAbsent) {
+        badgeHtml = `<span class="badge-full-absence evening"><i class="lucide-moon"></i> អវត្តមាន ១ ល្ងាចពេញ</span>`;
+      } else if (item.absentCount > 0) {
+        badgeHtml = `<span class="badge-full-absence partial"><i class="lucide-alert-circle"></i> អវត្តមាន ${item.absentCount} លើក</span>`;
+      } else if (item.leaveCount > 0) {
+        badgeHtml = `<span class="badge-full-absence leave"><i class="lucide-file-text"></i> ច្បាប់ ${item.leaveCount} លើក</span>`;
+      }
 
-        shifts.forEach(shift => {
-          const st = this.getAttendanceRecord(std.id, day, shift);
-          if (st === 'P') p++;
-          if (st === 'A') a++;
-          if (st === 'L') l++;
-        });
-      });
-    });
+      let timeNotes = [];
+      if (detail.amNote) timeNotes.push(`🌅 ព្រឹក៖ ${detail.amNote}`);
+      if (detail.pmNote) timeNotes.push(`🌇 ល្ងាច៖ ${detail.pmNote}`);
+      let timeNoteText = timeNotes.length > 0 ? timeNotes.join('<br>') : `អវត្តមានសរុប ${item.absentCount} លើក | ច្បាប់ ${item.leaveCount} លើក`;
+
+      return `
+        <li style="padding: 1rem 1.25rem; background: var(--bg-main); border-radius: var(--radius-lg); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.6rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+            <strong style="font-size: 1.05rem; font-weight: 800;">${item.student.name}</strong>
+            <div>${badgeHtml}</div>
+          </div>
+          <div class="absence-time-detail" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+            <i class="lucide-clock" style="color: var(--primary); font-size: 0.9rem;"></i>
+            <span>${timeNoteText}</span>
+          </div>
+        </li>
+      `;
+    };
 
     this.elViewAnalytics.innerHTML = `
       <div style="background: var(--bg-card); padding: 1rem 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; box-shadow: var(--shadow-sm);">
@@ -1125,17 +1217,11 @@ class AttendanceApp {
 
       <div class="charts-grid" style="grid-template-columns: 1fr;">
         <div class="chart-card">
-          <h3 style="margin-bottom: 1rem; font-size: 1.1rem; font-weight: 700;">អវត្តមាន</h3>
+          <h3 style="margin-bottom: 1rem; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="lucide-user-x" style="color: var(--status-a-text);"></i> បញ្ជីសិស្សអវត្តមាន និង ម៉ោងសិក្សា
+          </h3>
           <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
-            ${this.getLowAttendanceStudents().map(item => `
-              <li style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: var(--bg-main); border-radius: var(--radius-md);">
-                <strong style="font-size: 1rem;">${item.student.name}</strong>
-                <div style="display: flex; gap: 0.4rem; align-items: center;">
-                  ${item.absentCount > 0 ? `<span class="status-cell-btn A" style="width: 32px; height: 32px; font-size: 0.85rem; font-weight: 700; cursor: default; display: inline-flex; align-items: center; justify-content: center;" title="អវត្តមាន ${item.absentCount} លើក">A</span>` : ''}
-                  ${item.leaveCount > 0 ? `<span class="status-cell-btn L" style="width: 32px; height: 32px; font-size: 0.85rem; font-weight: 700; cursor: default; display: inline-flex; align-items: center; justify-content: center;" title="ច្បាប់ ${item.leaveCount} លើក">L</span>` : ''}
-                </div>
-              </li>
-            `).join('') || '<li style="color: var(--text-muted);">គ្មានសិស្សអវត្តមាន ឬ សុំច្បាប់ទេ! 👍</li>'}
+            ${lowAttendanceList.map(item => renderStudentCard(item)).join('') || '<li style="color: var(--text-muted); padding: 1rem;">គ្មានសិស្សអវត្តមាន ឬ សុំច្បាប់ទេ! 👍</li>'}
           </ul>
         </div>
       </div>
@@ -1213,42 +1299,51 @@ class AttendanceApp {
     const absentItems = this.getLowAttendanceStudents();
     const absentListHtml = absentItems.length === 0
       ? `<p style="color:#94a3b8; font-size:0.95rem; padding: 1rem 0;">គ្មានសិស្សអវត្តមាន ឬ សុំច្បាប់ទេ! 👍</p>`
-      : absentItems.map((item, i) => `
-          <div style="
-            display:flex; align-items:center; justify-content:space-between;
-            padding: 0.85rem 1.1rem;
-            background:${isDark ? '#1a2d4a' : '#f1f5f9'};
-            border-radius: 10px;
-            margin-bottom: 0.6rem;
-            border: 1px solid ${isDark ? 'rgba(148,163,184,0.12)' : '#e2e8f0'};
-          ">
-            <div style="display:flex; align-items:center; gap:0.75rem;">
-              <span style="
-                width:28px; height:28px; border-radius:50%;
-                background:${isDark ? '#0f2744' : '#cbd5e1'};
-                display:flex; align-items:center; justify-content:center;
-                font-size:0.78rem; font-weight:700; color:${isDark ? '#94a3b8':'#475569'};
-              ">${i + 1}</span>
-              <span style="font-size:1rem; font-weight:700; color:${isDark ? '#f1f5f9':'#0f172a'};">${item.student.name}</span>
+      : absentItems.map((item, i) => {
+          const detail = this.getStudentAbsenceDetail(item.student.id, this.selectedDailyDate);
+          let badgeText = item.absentCount > 0 ? `អវត្តមាន ${item.absentCount} លើក` : `ច្បាប់ ${item.leaveCount} លើក`;
+          if (detail.isFullDayAbsent) badgeText = 'អវត្តមាន ពេញមួយថ្ងៃ';
+          else if (detail.isFullMorningAbsent) badgeText = 'អវត្តមាន ១ ព្រឹកពេញ';
+          else if (detail.isFullEveningAbsent) badgeText = 'អវត្តមាន ១ ល្ងាចពេញ';
+
+          let timeNotes = [];
+          if (detail.amNote) timeNotes.push(`🌅 ព្រឹក៖ ${detail.amNote}`);
+          if (detail.pmNote) timeNotes.push(`<ctrl42> ល្ងាច៖ ${detail.pmNote}`);
+          let timeNoteText = timeNotes.join(' | ');
+
+          return `
+            <div style="
+              display:flex; align-items:center; justify-content:space-between;
+              padding: 0.85rem 1.1rem;
+              background:${isDark ? '#1a2d4a' : '#f1f5f9'};
+              border-radius: 10px;
+              margin-bottom: 0.6rem;
+              border: 1px solid ${isDark ? 'rgba(148,163,184,0.12)' : '#e2e8f0'};
+            ">
+              <div style="display:flex; flex-direction:column; gap:0.2rem;">
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                  <span style="
+                    width:28px; height:28px; border-radius:50%;
+                    background:${isDark ? '#0f2744' : '#cbd5e1'};
+                    display:flex; align-items:center; justify-content:center;
+                    font-size:0.78rem; font-weight:700; color:${isDark ? '#94a3b8':'#475569'};
+                  ">${i + 1}</span>
+                  <span style="font-size:1rem; font-weight:700; color:${isDark ? '#f1f5f9':'#0f172a'};">${item.student.name}</span>
+                </div>
+                ${timeNoteText ? `<div style="font-size:0.8rem; color:#94a3b8; padding-left:2.4rem;">⏰ ${timeNoteText}</div>` : ''}
+              </div>
+              <div style="display:flex; gap:0.4rem; align-items:center;">
+                <span style="
+                  padding: 0.3rem 0.75rem; border-radius:20px;
+                  background:rgba(239,68,68,0.15); color:#ef4444;
+                  border: 1.5px solid rgba(239,68,68,0.4);
+                  display:inline-flex; align-items:center; justify-content:center;
+                  font-size:0.8rem; font-weight:800;
+                ">${badgeText}</span>
+              </div>
             </div>
-            <div style="display:flex; gap:0.4rem;">
-              ${item.absentCount > 0 ? `<span style="
-                width:34px; height:34px; border-radius:8px;
-                background:rgba(239,68,68,0.15); color:#ef4444;
-                border: 1.5px solid rgba(239,68,68,0.4);
-                display:inline-flex; align-items:center; justify-content:center;
-                font-size:0.9rem; font-weight:800;
-              ">A</span>` : ''}
-              ${item.leaveCount > 0 ? `<span style="
-                width:34px; height:34px; border-radius:8px;
-                background:rgba(245,158,11,0.15); color:#f59e0b;
-                border: 1.5px solid rgba(245,158,11,0.4);
-                display:inline-flex; align-items:center; justify-content:center;
-                font-size:0.9rem; font-weight:800;
-              ">L</span>` : ''}
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
     // Create the off-screen card for capture
     const card = document.createElement('div');
