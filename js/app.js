@@ -765,7 +765,7 @@ class AttendanceApp {
     // Smart auto-detect current session unless manually overridden
     const liveTime = this.getCambodiaTime();
     const isLiveMorning = liveTime.isMorning;
-    const autoShiftText = isLiveMorning ? '🌅 វេនព្រឹក' : '🌇 វេនល្ងាច';
+    const autoShiftText = isLiveMorning ? 'វេនព្រឹក' : 'វេនល្ងាច';
 
     const selectedDateObj = new Date(this.data.activeYear, this.data.activeMonth - 1, this.selectedDailyDate);
     const isSaturday = selectedDateObj.getDay() === 6;
@@ -793,11 +793,11 @@ class AttendanceApp {
       <div class="daily-shift-switcher">
         <div class="daily-shift-tabs">
           <button class="daily-shift-btn am ${isAM ? 'active' : ''}" onclick="app.setDailyShift('AM')">
-            🌅 វេនព្រឹក
+            វេនព្រឹក
           </button>
           ${!isSaturday ? `
             <button class="daily-shift-btn pm ${!isAM ? 'active' : ''}" onclick="app.setDailyShift('PM')">
-              🌇 វេនល្ងាច
+              វេនល្ងាច
             </button>
           ` : `
             <span style="font-size:0.75rem; color:var(--text-muted); padding:0.4rem 0.6rem; align-self:center;">(ថ្ងៃសៅរ៍រៀនតែ១ព្រឹក)</span>
@@ -1223,8 +1223,8 @@ class AttendanceApp {
       }
 
       let timeNotes = [];
-      if (detail.amNote) timeNotes.push(`🌅 ព្រឹក៖ ${detail.amNote}`);
-      if (detail.pmNote) timeNotes.push(`🌇 ល្ងាច៖ ${detail.pmNote}`);
+      if (detail.amNote) timeNotes.push(`ព្រឹក៖ ${detail.amNote}`);
+      if (detail.pmNote) timeNotes.push(`ល្ងាច៖ ${detail.pmNote}`);
       let timeNoteText = timeNotes.length > 0 ? timeNotes.join('<br>') : `អវត្តមានសរុប ${item.absentCount} លើក | ច្បាប់ ${item.leaveCount} លើក`;
 
       return `
@@ -1356,8 +1356,8 @@ class AttendanceApp {
           }
 
           let timeNotes = [];
-          if (detail.amNote) timeNotes.push(`🌅 ព្រឹក៖ ${detail.amNote}`);
-          if (detail.pmNote) timeNotes.push(`🌇 ល្ងាច៖ ${detail.pmNote}`);
+          if (detail.amNote) timeNotes.push(`ព្រឹក៖ ${detail.amNote}`);
+          if (detail.pmNote) timeNotes.push(`ល្ងាច៖ ${detail.pmNote}`);
           let timeNoteText = timeNotes.join(' | ');
 
           return `
