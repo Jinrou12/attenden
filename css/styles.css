@@ -2315,31 +2315,37 @@ body::before {
     white-space: nowrap !important;
   }
 
-  /* Daily View Split Table: 2 columns side-by-side on mobile, perfectly aligned */
+  /* Daily View Split Table: Stacked 1-column on mobile for 100% full readability without truncation */
   .split-tables-wrapper {
     display: flex !important;
-    flex-direction: row !important;
-    gap: 0.25rem !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
     width: 100% !important;
+  }
+
+  @media (min-width: 769px) {
+    .split-tables-wrapper {
+      flex-direction: row !important;
+      gap: 0.5rem !important;
+    }
   }
 
   .split-table-col {
-    flex: 1 !important;
-    min-width: 0 !important;
-    width: 50% !important;
+    width: 100% !important;
+    flex: 1 1 auto !important;
   }
 
   .daily-attendance-table {
-    table-layout: fixed !important;
+    table-layout: auto !important;
     width: 100% !important;
   }
 
-  /* Student name column in daily attendance table on mobile */
+  /* Student name column in daily attendance table on mobile - FULL READABILITY */
   .daily-attendance-table .student-name-td {
     width: auto !important;
-    min-width: 0 !important;
-    padding: 0.3rem 0.1rem 0.3rem 0.25rem !important;
-    font-size: 0.68rem !important;
+    min-width: 120px !important;
+    padding: 0.4rem 0.5rem !important;
+    font-size: 0.8rem !important;
     font-weight: 700 !important;
     text-align: left !important;
     white-space: nowrap !important;
@@ -2347,22 +2353,22 @@ body::before {
     text-overflow: ellipsis !important;
   }
 
-  /* Hourly columns on mobile daily table */
+  /* Hourly columns on mobile daily table - Comfortable touchable size */
   .daily-attendance-table .hourly-th-col,
   .daily-attendance-table .hourly-td-col,
   .daily-attendance-table .total-status-td {
-    width: 22px !important;
-    min-width: 18px !important;
-    max-width: 24px !important;
-    padding: 0.15rem 0.5px !important;
+    width: 32px !important;
+    min-width: 28px !important;
+    max-width: 36px !important;
+    padding: 0.25rem 2px !important;
     text-align: center !important;
   }
 
   .daily-attendance-table .status-cell-btn {
-    width: 19px !important;
-    height: 22px !important;
-    font-size: 0.62rem !important;
-    border-radius: 3px !important;
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.78rem !important;
+    border-radius: 6px !important;
     padding: 0 !important;
     margin: 0 auto !important;
   }
