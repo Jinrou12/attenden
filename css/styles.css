@@ -2315,7 +2315,7 @@ body::before {
     white-space: nowrap !important;
   }
 
-  /* Daily View Split Table: 2 columns side-by-side on mobile, perfectly aligned to right edge */
+  /* Daily View Split Table: 2 columns side-by-side on mobile, perfectly aligned */
   .split-tables-wrapper {
     display: flex !important;
     flex-direction: row !important;
@@ -2329,17 +2329,16 @@ body::before {
     width: 50% !important;
   }
 
-  .split-tables-wrapper .weekly-attendance-table {
+  .daily-attendance-table {
     table-layout: fixed !important;
     width: 100% !important;
   }
 
-  /* Student name column in split table */
-  .split-tables-wrapper .weekly-attendance-table .student-name-td,
-  .split-tables-wrapper .weekly-attendance-table th:nth-child(1) {
+  /* Student name column in daily attendance table on mobile */
+  .daily-attendance-table .student-name-td {
     width: auto !important;
     min-width: 0 !important;
-    padding: 0.3rem 0.1rem 0.3rem 0.2rem !important;
+    padding: 0.3rem 0.1rem 0.3rem 0.25rem !important;
     font-size: 0.68rem !important;
     font-weight: 700 !important;
     text-align: left !important;
@@ -2348,10 +2347,10 @@ body::before {
     text-overflow: ellipsis !important;
   }
 
-  /* Hourly columns on mobile split table */
-  .split-tables-wrapper .hourly-th-col,
-  .split-tables-wrapper .hourly-td-col,
-  .split-tables-wrapper .total-status-td {
+  /* Hourly columns on mobile daily table */
+  .daily-attendance-table .hourly-th-col,
+  .daily-attendance-table .hourly-td-col,
+  .daily-attendance-table .total-status-td {
     width: 22px !important;
     min-width: 18px !important;
     max-width: 24px !important;
@@ -2359,7 +2358,7 @@ body::before {
     text-align: center !important;
   }
 
-  .split-tables-wrapper .status-cell-btn {
+  .daily-attendance-table .status-cell-btn {
     width: 19px !important;
     height: 22px !important;
     font-size: 0.62rem !important;

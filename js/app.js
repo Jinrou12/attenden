@@ -826,7 +826,7 @@ class AttendanceApp {
         <div class="split-tables-wrapper">
           <div class="split-table-col split-table-col-1">
             <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid ${borderColor}; overflow-x: auto; box-shadow: var(--shadow-sm);">
-              <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
+              <table class="daily-attendance-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
                   <tr style="background: ${bgOpacity};">
                     <th class="student-name-td" style="padding: 0.35rem 0.3rem; text-align: left; font-size: 0.75rem; color: ${thColor}; font-weight: 800;">ឈ្មោះសិស្ស</th>
@@ -841,7 +841,7 @@ class AttendanceApp {
 
           <div class="split-table-col split-table-col-2">
             <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid ${borderColor}; overflow-x: auto; box-shadow: var(--shadow-sm);">
-              <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
+              <table class="daily-attendance-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
                   <tr style="background: ${bgOpacity};">
                     <th class="student-name-td" style="padding: 0.35rem 0.3rem; text-align: left; font-size: 0.75rem; color: ${thColor}; font-weight: 800;">ឈ្មោះសិស្ស</th>
@@ -859,12 +859,12 @@ class AttendanceApp {
       const rowsHtml = students.map((std, i) => renderRow(std, i)).join('');
       tableContentHtml = `
         <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow-x: auto; box-shadow: var(--shadow-sm);">
-          <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
+          <table class="daily-attendance-table" style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="background: var(--bg-main);">
-                <th style="padding: 0.45rem 0.5rem; text-align: left; font-size: 0.75rem; color: var(--text-main); font-weight: 800;">ឈ្មោះសិស្ស (${students.length} នាក់)</th>
+                <th class="student-name-td" style="padding: 0.45rem 0.5rem; text-align: left; font-size: 0.75rem; color: var(--text-main); font-weight: 800;">ឈ្មោះសិស្ស (${students.length} នាក់)</th>
                 ${headerThs}
-                <th style="padding: 0.45rem 0.1rem; text-align: center; color: var(--text-muted); font-size: 0.7rem; font-weight: 800;">សរុប</th>
+                <th class="total-status-td" style="padding: 0.45rem 0.1rem; text-align: center; color: var(--text-muted); font-size: 0.7rem; font-weight: 800;">សរុប</th>
               </tr>
             </thead>
             <tbody>
