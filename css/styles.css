@@ -2319,7 +2319,7 @@ body::before {
   .split-tables-wrapper {
     display: flex !important;
     flex-direction: row !important;
-    gap: 0.35rem !important;
+    gap: 0.25rem !important;
     width: 100% !important;
   }
 
@@ -2330,18 +2330,17 @@ body::before {
   }
 
   .split-tables-wrapper .weekly-attendance-table {
-    table-layout: auto !important;
+    table-layout: fixed !important;
     width: 100% !important;
   }
 
-  /* Student name column in split table takes full available left space */
-  .split-tables-wrapper .weekly-attendance-table th:nth-child(1),
-  .split-tables-wrapper .weekly-attendance-table td:nth-child(1) {
+  /* Student name column in split table */
+  .split-tables-wrapper .weekly-attendance-table .student-name-td,
+  .split-tables-wrapper .weekly-attendance-table th:nth-child(1) {
     width: auto !important;
     min-width: 0 !important;
-    max-width: none !important;
-    padding: 0.35rem 0.15rem 0.35rem 0.25rem !important;
-    font-size: 0.72rem !important;
+    padding: 0.3rem 0.1rem 0.3rem 0.2rem !important;
+    font-size: 0.68rem !important;
     font-weight: 700 !important;
     text-align: left !important;
     white-space: nowrap !important;
@@ -2349,23 +2348,22 @@ body::before {
     text-overflow: ellipsis !important;
   }
 
-  /* AM and PM button columns aligned tight to the right edge of each box */
-  .split-tables-wrapper .weekly-attendance-table th:nth-child(2),
-  .split-tables-wrapper .weekly-attendance-table td:nth-child(2),
-  .split-tables-wrapper .weekly-attendance-table th:nth-child(3),
-  .split-tables-wrapper .weekly-attendance-table td:nth-child(3) {
-    width: 25px !important;
-    min-width: 25px !important;
-    max-width: 27px !important;
-    padding: 0.2rem 1px !important;
+  /* Hourly columns on mobile split table */
+  .split-tables-wrapper .hourly-th-col,
+  .split-tables-wrapper .hourly-td-col,
+  .split-tables-wrapper .total-status-td {
+    width: 22px !important;
+    min-width: 18px !important;
+    max-width: 24px !important;
+    padding: 0.15rem 0.5px !important;
     text-align: center !important;
   }
 
   .split-tables-wrapper .status-cell-btn {
-    width: 22px !important;
-    height: 24px !important;
-    font-size: 0.7rem !important;
-    border-radius: 4px !important;
+    width: 19px !important;
+    height: 22px !important;
+    font-size: 0.62rem !important;
+    border-radius: 3px !important;
     padding: 0 !important;
     margin: 0 auto !important;
   }
@@ -2433,26 +2431,26 @@ body::before {
 .summary-card:nth-child(4) { animation-delay: 0.20s; }
 
 /* ============================================================ */
-/*  DAILY HOURLY ATTENDANCE STYLES                             */
+/*  DAILY HOURLY ATTENDANCE REFINED STYLES                      */
 /* ============================================================ */
 .daily-shift-switcher {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.5rem;
   background: var(--bg-card);
-  padding: 0.6rem 1rem;
+  padding: 0.45rem 0.75rem;
   border-radius: var(--r-md);
   border: 1px solid var(--border-color);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.6rem;
   flex-wrap: wrap;
 }
 
 .daily-shift-tabs {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.35rem;
   background: var(--bg-main);
-  padding: 0.25rem;
+  padding: 0.2rem;
   border-radius: var(--r-md);
   border: 1px solid var(--border-color);
 }
@@ -2460,16 +2458,17 @@ body::before {
 .daily-shift-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.45rem 0.85rem;
+  gap: 0.3rem;
+  padding: 0.35rem 0.65rem;
   border-radius: var(--r-sm);
   border: 1px solid transparent;
   background: transparent;
   color: var(--text-muted);
   font-family: inherit;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
+  white-space: nowrap;
   transition: var(--t-base);
 }
 
@@ -2482,37 +2481,37 @@ body::before {
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.35));
   color: #34d399;
   border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.25);
 }
 
 .daily-shift-btn.active.pm {
   background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0.35));
   color: #38bdf8;
   border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.25);
 }
 
 .smart-auto-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.78rem;
+  gap: 0.3rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.35rem 0.8rem;
+  padding: 0.25rem 0.6rem;
   border-radius: var(--r-full);
   background: rgba(16, 185, 129, 0.12);
   color: var(--primary);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  white-space: nowrap;
 }
 
 .hourly-th-badge {
   display: inline-block;
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
+  padding: 0.12rem 0.25rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.02em;
+  white-space: nowrap !important;
+  line-height: 1.1;
 }
 
 .hourly-th-am {
@@ -2528,15 +2527,20 @@ body::before {
 }
 
 .hourly-status-btn {
-  width: 34px;
-  height: 34px;
-  font-size: 0.88rem;
+  width: 25px;
+  height: 25px;
+  font-size: 0.75rem;
   font-weight: 800;
   border-radius: var(--r-xs);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  margin: 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
 }
 
 .hourly-status-btn:hover {
-  transform: scale(1.18);
+  transform: scale(1.15);
 }
+
 

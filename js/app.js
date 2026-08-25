@@ -778,7 +778,7 @@ class AttendanceApp {
         ];
 
     let headerThs = hours.map(h => 
-      `<th style="padding: 0.45rem 0.2rem; text-align: center; font-size: 0.72rem; font-weight: 800;">
+      `<th class="hourly-th-col" style="padding: 0.35rem 0.1rem; text-align: center;">
         <span class="hourly-th-badge ${isAM ? 'hourly-th-am' : 'hourly-th-pm'}">${h.label}</span>
       </th>`
     ).join('');
@@ -786,7 +786,7 @@ class AttendanceApp {
     let renderRow = (std, i) => {
       let hourButtons = hours.map(h => {
         const status = this.getHourlyAttendanceRecord(std.id, this.selectedDailyDate, currentShift, h.num);
-        return `<td style="text-align: center; padding: 0.35rem 0.15rem;">
+        return `<td class="hourly-td-col" style="text-align: center; padding: 0.25rem 0.1rem;">
           <button class="status-cell-btn hourly-status-btn ${status}" onclick="app.onHourlyCellClick('${std.id}', '${currentShift}', ${h.num})" title="ម៉ោងទី${h.num} (${h.label})">
             ${status === 'NONE' ? '-' : status}
           </button>
@@ -796,12 +796,12 @@ class AttendanceApp {
       const shiftStatus = this.getAttendanceRecord(std.id, this.selectedDailyDate, currentShift);
 
       return `<tr style="border-bottom: 1px solid var(--border-color);">
-        <td style="padding: 0.55rem 0.4rem; font-weight: 700; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.85rem;">
+        <td class="student-name-td" style="padding: 0.45rem 0.3rem; font-weight: 700; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.8rem;">
           ${toKhmerNum(i + 1)}. ${std.name}
         </td>
         ${hourButtons}
-        <td style="text-align: center; padding: 0.35rem 0.2rem;">
-          <span class="status-cell-btn ${shiftStatus}" style="width: 28px; height: 28px; font-size: 0.75rem; cursor: default; display: inline-flex;" title="សរុបវេន">
+        <td class="total-status-td" style="text-align: center; padding: 0.25rem 0.1rem;">
+          <span class="status-cell-btn hourly-status-btn ${shiftStatus}" style="opacity: 0.85; cursor: default; display: inline-flex;" title="សរុបវេន">
             ${shiftStatus === 'NONE' ? '-' : shiftStatus}
           </span>
         </td>
@@ -829,9 +829,9 @@ class AttendanceApp {
               <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
                   <tr style="background: ${bgOpacity};">
-                    <th style="padding: 0.4rem 0.4rem; text-align: left; font-size: 0.75rem; color: ${thColor}; font-weight: 800;">ឈ្មោះសិស្ស</th>
+                    <th class="student-name-td" style="padding: 0.35rem 0.3rem; text-align: left; font-size: 0.75rem; color: ${thColor}; font-weight: 800;">ឈ្មោះសិស្ស</th>
                     ${headerThs}
-                    <th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--text-muted); font-size: 0.68rem; font-weight: 800;">សរុប</th>
+                    <th class="total-status-td" style="padding: 0.35rem 0.1rem; text-align: center; color: var(--text-muted); font-size: 0.65rem; font-weight: 800;">សរុប</th>
                   </tr>
                 </thead>
                 <tbody>${rowsPart1}</tbody>
@@ -844,9 +844,9 @@ class AttendanceApp {
               <table class="weekly-attendance-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
                   <tr style="background: ${bgOpacity};">
-                    <th style="padding: 0.4rem 0.4rem; text-align: left; font-size: 0.75rem; color: ${thColor}; font-weight: 800;">ឈ្មោះសិស្ស</th>
+                    <th class="student-name-td" style="padding: 0.35rem 0.3rem; text-align: left; font-size: 0.75rem; color: ${thColor}; font-weight: 800;">ឈ្មោះសិស្ស</th>
                     ${headerThs}
-                    <th style="padding: 0.4rem 0.1rem; text-align: center; color: var(--text-muted); font-size: 0.68rem; font-weight: 800;">សរុប</th>
+                    <th class="total-status-td" style="padding: 0.35rem 0.1rem; text-align: center; color: var(--text-muted); font-size: 0.65rem; font-weight: 800;">សរុប</th>
                   </tr>
                 </thead>
                 <tbody>${rowsPart2}</tbody>
