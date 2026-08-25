@@ -1149,15 +1149,15 @@ class AttendanceApp {
     // Morning arrival / departure time notes (7:00 - 9:00)
     let amNote = '';
     if (isFullMorningAbsent) {
-      amNote = 'អវត្តមាន ១ ព្រឹកពេញ (ម៉ោង ៧:០០ - ៩:០០)';
+      amNote = 'អត់មក ១ ព្រឹកពេញ (ម៉ោង ៧:០០ - ៩:០០)';
     } else if (isFullMorningLeave) {
       amNote = 'សុំច្បាប់ ១ ព្រឹកពេញ (ម៉ោង ៧:០០ - ៩:០០)';
     } else {
       let notes = [];
       if (amStatuses[0] === 'A' && amStatuses[1] === 'P') {
-        notes.push('មកម៉ោង ៨:០០ (អវត្តមានម៉ោង ៧:០០-៨:០០)');
+        notes.push('មកម៉ោង ៨:០០ (អត់មកម៉ោង ៧:០០-៨:០០)');
       } else if (amStatuses[0] === 'P' && amStatuses[1] === 'A') {
-        notes.push('ទៅវិញម៉ោង ៨:០០ (អវត្តមានម៉ោង ៨:០០-៩:០០)');
+        notes.push('អត់មកម៉ោង ៨:០០-៩:០០');
       }
       amNote = notes.join(' | ');
     }
@@ -1165,23 +1165,23 @@ class AttendanceApp {
     // Evening arrival / departure time notes (1:00 - 5:00)
     let pmNote = '';
     if (isFullEveningAbsent) {
-      pmNote = 'អវត្តមាន ១ ល្ងាចពេញ (ម៉ោង ១:០០ - ៥:០០)';
+      pmNote = 'អត់មក ១ ល្ងាចពេញ (ម៉ោង ១:០០ - ៥:០០)';
     } else if (isFullEveningLeave) {
       pmNote = 'សុំច្បាប់ ១ ល្ងាចពេញ (ម៉ោង ១:០០ - ៥:០០)';
     } else {
       let notes = [];
       if (pmStatuses[0] === 'A' && pmStatuses[1] === 'P') {
-        notes.push('មកម៉ោង ២:០០ (អវត្តមានម៉ោង ១:០០-២:០០)');
+        notes.push('មកម៉ោង ២:០០ (អត់មកម៉ោង ១:០០-២:០០)');
       } else if (pmStatuses[0] === 'A' && pmStatuses[1] === 'A' && pmStatuses[2] === 'P') {
-        notes.push('មកម៉ោង ៣:០០ (អវត្តមានម៉ោង ១:០០-៣:០០)');
+        notes.push('មកម៉ោង ៣:០០ (អត់មកម៉ោង ១:០០-៣:០០)');
       }
 
       if (pmStatuses[0] === 'P' && pmStatuses[1] === 'P' && pmStatuses[2] === 'P' && pmStatuses[3] === 'A') {
-        notes.push('ទៅវិញម៉ោង ៤:០០ (អវត្តមានម៉ោង ៤:០០-៥:០០)');
+        notes.push('អត់មកម៉ោង ៤:០០-៥:០០');
       } else if (pmStatuses[0] === 'P' && pmStatuses[1] === 'P' && pmStatuses[2] === 'A' && pmStatuses[3] === 'A') {
-        notes.push('ទៅវិញម៉ោង ៣:០០ (អវត្តមានម៉ោង ៣:០០-៥:០០)');
+        notes.push('អត់មកម៉ោង ៣:០០-៥:០០');
       } else if (pmStatuses[0] === 'P' && pmStatuses[1] === 'A' && pmStatuses[2] === 'P' && pmStatuses[3] === 'P') {
-        notes.push('អវត្តមានម៉ោង ២:០០ - ៣:០០');
+        notes.push('អត់មកម៉ោង ២:០០-៣:០០');
       }
       pmNote = notes.join(' | ');
     }
