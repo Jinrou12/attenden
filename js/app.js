@@ -745,11 +745,11 @@ class AttendanceApp {
       <div class="daily-shift-switcher">
         <div class="daily-shift-tabs">
           <button class="daily-shift-btn am ${isAM ? 'active' : ''}" onclick="app.setDailyShift('AM')">
-            🌅 វេនព្រឹក (៣ម៉ោង៖ ៧-៨, ៨-៩, ៩-១០)
+            🌅 វេនព្រឹក
           </button>
           ${!isSaturday ? `
             <button class="daily-shift-btn pm ${!isAM ? 'active' : ''}" onclick="app.setDailyShift('PM')">
-              🌇 វេនល្ងាច (៤ម៉ោង៖ ១-២, ២-៣, ៣-៤, ៤-៥)
+              🌇 វេនល្ងាច
             </button>
           ` : `
             <span style="font-size:0.75rem; color:var(--text-muted); padding:0.4rem 0.6rem; align-self:center;">(ថ្ងៃសៅរ៍រៀនតែ១ព្រឹក)</span>
