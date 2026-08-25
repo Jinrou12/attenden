@@ -309,6 +309,17 @@ class AttendanceApp {
       this.data.attendance[key] = {};
     }
     this.data.attendance[key][`${studentId}_${day}`] = status;
+
+    // Sync all hourly records for this shift (AM: H1..H3, PM: H1..H4)
+    const maxHours = (shift === 'AM') ? 3 : 4;
+    for (let h = 1; h <= maxHours; h++) {
+      const hourlyKey = `${studentId}_${day}_H${h}`;
+      if (status === 'NONE') {
+        delete this.data.attendance[key][hourlyKey];
+      } else {
+        this.data.attendance[key][hourlyKey] = status;
+      }
+    }
     this.saveData();
   }
 
