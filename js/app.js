@@ -812,9 +812,9 @@ class AttendanceApp {
         </td>
         ${hourButtons}
         <td class="total-status-td" style="text-align: center; padding: 0.25rem 0.1rem;">
-          <span class="status-cell-btn hourly-status-btn ${shiftStatus}" style="opacity: 0.85; cursor: default; display: inline-flex;" title="សរុបវេន">
+          <button class="status-cell-btn hourly-status-btn ${shiftStatus}" onclick="app.onDailyCellClick('${std.id}', '${currentShift}')" title="កំណត់វត្តមានសរុបវេន">
             ${shiftStatus === 'NONE' ? '-' : shiftStatus}
-          </span>
+          </button>
         </td>
       </tr>`;
     };
