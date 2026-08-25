@@ -664,17 +664,54 @@ class AttendanceApp {
       hourStatuses.push(this.getHourlyAttendanceRecord(studentId, day, shift, h));
     }
 
+    const pCount = hourStatuses.filter(s => s === 'P').length;
+    const aCount = hourStatuses.filter(s => s === 'A').length;
+    const lCount = hourStatuses.filter(s => s === 'L').length;
+    const totalSet = pCount + aCount + lCount;
+
     let shiftAggregate = 'NONE';
-    if (hourStatuses.every(s => s === 'P')) {
-      shiftAggregate = 'P';
-    } else if (hourStatuses.some(s => s === 'A')) {
-      shiftAggregate = 'A';
-    } else if (hourStatuses.some(s => s === 'L')) {
-      shiftAggregate = 'L';
-    } else if (hourStatuses.some(s => s === 'P')) {
-      shiftAggregate = 'P';
-    } else {
+    if (totalSet === 0) {
       shiftAggregate = 'NONE';
+    } else if (shift === 'AM') { // Morning session (3 hours)
+      if (pCount === 3) {
+        shiftAggregate = 'P';
+      } else if (aCount === 3) {
+        shiftAggregate = 'A';
+      } else if (lCount === 3) {
+        shiftAggregate = 'L';
+      } else if (pCount >= 1 && (aCount >= 1 || lCount >= 1)) {
+        // "ព្រឹក P 1 A 1 = L" -> Mixed present & absent/leave in morning => L
+        shiftAggregate = 'L';
+      } else if (aCount > 0) {
+        shiftAggregate = 'A';
+      } else if (lCount > 0) {
+        shiftAggregate = 'L';
+      } else {
+        shiftAggregate = 'P';
+      }
+    } else { // Evening session (4 hours)
+      if (pCount === 4) {
+        shiftAggregate = 'P';
+      } else if (aCount === 4) {
+        shiftAggregate = 'A';
+      } else if (lCount === 4) {
+        shiftAggregate = 'L';
+      } else if (pCount === 1 && aCount >= 3) {
+        // "ល្ងាច P1 A3 = A"
+        shiftAggregate = 'A';
+      } else if (pCount === 2 && (aCount + lCount) >= 2) {
+        // "P2 A2 = L"
+        shiftAggregate = 'L';
+      } else if (pCount >= 3) {
+        // "P3 A1 = P"
+        shiftAggregate = 'P';
+      } else if (aCount > pCount) {
+        shiftAggregate = 'A';
+      } else if (lCount > 0) {
+        shiftAggregate = 'L';
+      } else {
+        shiftAggregate = 'P';
+      }
     }
 
     this.data.attendance[key][`${studentId}_${day}`] = shiftAggregate;
