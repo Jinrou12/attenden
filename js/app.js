@@ -310,8 +310,8 @@ class AttendanceApp {
     }
     this.data.attendance[key][`${studentId}_${day}`] = status;
 
-    // Sync all hourly records for this shift (AM: H1..H3, PM: H1..H4)
-    const maxHours = (shift === 'AM') ? 3 : 4;
+    // Sync all hourly records for this shift (AM: H1..H2, PM: H1..H4)
+    const maxHours = (shift === 'AM') ? 2 : 4;
     for (let h = 1; h <= maxHours; h++) {
       const hourlyKey = `${studentId}_${day}_H${h}`;
       if (status === 'NONE') {
@@ -658,7 +658,7 @@ class AttendanceApp {
     const hourlyKey = `${studentId}_${day}_H${hour}`;
     this.data.attendance[key][hourlyKey] = status;
 
-    const maxHours = (shift === 'AM') ? 3 : 4;
+    const maxHours = (shift === 'AM') ? 2 : 4;
     const hourStatuses = [];
     for (let h = 1; h <= maxHours; h++) {
       hourStatuses.push(this.getHourlyAttendanceRecord(studentId, day, shift, h));
@@ -672,14 +672,14 @@ class AttendanceApp {
     let shiftAggregate = 'NONE';
     if (totalSet === 0) {
       shiftAggregate = 'NONE';
-    } else if (shift === 'AM') { // Morning session (3 hours)
-      if (pCount === 3) {
+    } else if (shift === 'AM') { // Morning session (2 hours)
+      if (pCount === 2) {
         shiftAggregate = 'P';
-      } else if (aCount === 3) {
+      } else if (aCount === 2) {
         shiftAggregate = 'A';
-      } else if (lCount === 3) {
+      } else if (lCount === 2) {
         shiftAggregate = 'L';
-      } else if (pCount >= 1 && (aCount >= 1 || lCount >= 1)) {
+      } else if (pCount === 1 && (aCount === 1 || lCount === 1)) {
         // "ព្រឹក P 1 A 1 = L" -> Mixed present & absent/leave in morning => L
         shiftAggregate = 'L';
       } else if (aCount > 0) {
@@ -811,12 +811,11 @@ class AttendanceApp {
       </div>
     `;
 
-    // Hours definition: AM = 3 hours (7-8, 8-9, 9-10), PM = 4 hours (1-2, 2-3, 3-4, 4-5)
+    // Hours definition: AM = 2 hours (7-8, 8-9), PM = 4 hours (1-2, 2-3, 3-4, 4-5)
     const hours = isAM
       ? [
           { num: 1, label: "៧-៨" },
-          { num: 2, label: "៨-៩" },
-          { num: 3, label: "៩-១០" }
+          { num: 2, label: "៨-៩" }
         ]
       : [
           { num: 1, label: "១-២" },
@@ -1137,7 +1136,7 @@ class AttendanceApp {
   }
 
   getStudentAbsenceDetail(studentId, day = this.selectedDailyDate) {
-    const amHours = [1, 2, 3];
+    const amHours = [1, 2];
     const pmHours = [1, 2, 3, 4];
 
     const amStatuses = amHours.map(h => this.getHourlyAttendanceRecord(studentId, day, 'AM', h));
@@ -1150,26 +1149,18 @@ class AttendanceApp {
     const isFullMorningLeave = amStatuses.every(s => s === 'L');
     const isFullEveningLeave = pmStatuses.every(s => s === 'L');
 
-    // Morning arrival / departure time notes (7:00 - 10:00)
+    // Morning arrival / departure time notes (7:00 - 9:00)
     let amNote = '';
     if (isFullMorningAbsent) {
-      amNote = 'អវត្តមាន ១ ព្រឹកពេញ (ម៉ោង ៧:០០ - ១០:០០)';
+      amNote = 'អវត្តមាន ១ ព្រឹកពេញ (ម៉ោង ៧:០០ - ៩:០០)';
     } else if (isFullMorningLeave) {
-      amNote = 'សុំច្បាប់ ១ ព្រឹកពេញ (ម៉ោង ៧:០០ - ១០:០០)';
+      amNote = 'សុំច្បាប់ ១ ព្រឹកពេញ (ម៉ោង ៧:០០ - ៩:០០)';
     } else {
       let notes = [];
       if (amStatuses[0] === 'A' && amStatuses[1] === 'P') {
         notes.push('មកម៉ោង ៨:០០ (អវត្តមានម៉ោង ៧:០០-៨:០០)');
-      } else if (amStatuses[0] === 'A' && amStatuses[1] === 'A' && amStatuses[2] === 'P') {
-        notes.push('មកម៉ោង ៩:០០ (អវត្តមានម៉ោង ៧:០០-៩:០០)');
-      }
-
-      if (amStatuses[0] === 'P' && amStatuses[1] === 'P' && amStatuses[2] === 'A') {
-        notes.push('ទៅវិញម៉ោង ៩:០០ (អវត្តមានម៉ោង ៩:០០-១០:០០)');
-      } else if (amStatuses[0] === 'P' && amStatuses[1] === 'A' && amStatuses[2] === 'A') {
-        notes.push('ទៅវិញម៉ោង ៨:០០ (អវត្តមានម៉ោង ៨:០០-១០:០០)');
-      } else if (amStatuses[0] === 'P' && amStatuses[1] === 'A' && amStatuses[2] === 'P') {
-        notes.push('អវត្តមានម៉ោង ៨:០០ - ៩:០០');
+      } else if (amStatuses[0] === 'P' && amStatuses[1] === 'A') {
+        notes.push('ទៅវិញម៉ោង ៨:០០ (អវត្តមានម៉ោង ៨:០០-៩:០០)');
       }
       amNote = notes.join(' | ');
     }
