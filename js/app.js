@@ -193,6 +193,9 @@ class AttendanceApp {
     const btnCSV = document.getElementById('btnExportCSV');
     if (btnCSV) btnCSV.addEventListener('click', () => this.exportCSV());
 
+    const btnExcel = document.getElementById('btnExportExcel');
+    if (btnExcel) btnExcel.addEventListener('click', () => this.exportExcel());
+
     const btnPrint = document.getElementById('btnPrintReport');
     if (btnPrint) btnPrint.addEventListener('click', () => this.printReport());
 
@@ -1323,9 +1326,7 @@ class AttendanceApp {
     const monthName = khmerMonths[now.getMonth()];
     const year = now.getFullYear();
     const hour = now.getHours();
-    const minuteStr = String(now.getMinutes()).padStart(2, '0');
     const session = hour < 12 ? 'វេនព្រឹក (AM)' : 'វេនល្ងាច (PM)';
-    const timeStr = `${hour}:${minuteStr}`;
     const isDark = document.body.getAttribute('data-theme') === 'dark';
 
     // Build absent list HTML
@@ -1333,6 +1334,7 @@ class AttendanceApp {
     const absentListHtml = absentItems.length === 0
       ? `<p style="color:#94a3b8; font-size:0.95rem; padding: 1rem 0;">គ្មានសិស្សអវត្តមាន ឬ សុំច្បាប់ទេ! 👍</p>`
       : absentItems.map((item, i) => {
+          const detail = this.getStudentAbsenceDetail(item.student.id, this.selectedDailyDate);
           let badgeHtml = '';
           if (detail.isFullDayAbsent) {
             badgeHtml = `<span style="padding:0.3rem 0.75rem; border-radius:20px; background:rgba(239,68,68,0.15); color:#ef4444; border:1.5px solid rgba(239,68,68,0.4); display:inline-flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:800;">អវត្តមាន ពេញមួយថ្ងៃ</span>`;
@@ -1384,29 +1386,27 @@ class AttendanceApp {
           `;
         }).join('');
 
-    // Create the off-screen card for capture
+    // Create element for capture
     const card = document.createElement('div');
     card.style.cssText = `
-      position: fixed; top: -9999px; left: -9999px;
-      width: 520px;
+      position: fixed; left: 0; top: 0;
+      width: 540px;
       background: ${isDark ? '#0f2744' : '#ffffff'};
       border-radius: 16px;
       padding: 28px;
-      font-family: 'Kantumruy Pro', 'Noto Sans Khmer', sans-serif;
+      font-family: 'Kantumruy Pro', 'Inter', sans-serif;
       box-shadow: 0 20px 60px rgba(0,0,0,0.4);
       border: 1px solid ${isDark ? 'rgba(148,163,184,0.15)' : '#e2e8f0'};
+      z-index: -9999;
+      opacity: 1;
+      pointer-events: none;
     `;
     card.innerHTML = `
-      <!-- Gradient top accent -->
       <div style="height:4px; border-radius:4px; background:linear-gradient(90deg,#10b981,#6366f1); margin-bottom:22px;"></div>
-
-      <!-- Header: Class + School info -->
       <div style="margin-bottom: 18px;">
         <div style="font-size:1.3rem; font-weight:800; color:${isDark?'#f1f5f9':'#0f172a'}; line-height:1.3;">${cls ? cls.name : 'ថ្នាក់'}</div>
         ${cls && cls.room ? `<div style="font-size:0.82rem; color:${isDark?'#94a3b8':'#64748b'}; margin-top:2px;">${cls.room}</div>` : ''}
       </div>
-
-      <!-- Date + Session badge row -->
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
         <div style="
           display:inline-flex; align-items:center; gap:8px;
@@ -1427,8 +1427,6 @@ class AttendanceApp {
           <span style="font-size:0.9rem; font-weight:700; color:#818cf8;">${session}</span>
         </div>
       </div>
-
-      <!-- Section title -->
       <div style="
         font-size:1.05rem; font-weight:700;
         color:${isDark?'#f1f5f9':'#0f172a'};
@@ -1441,8 +1439,6 @@ class AttendanceApp {
           border-radius:50px; padding:2px 10px; font-size:0.78rem; font-weight:800;
         ">${absentItems.length} នាក់</span>
       </div>
-
-      <!-- Absent list -->
       <div>${absentListHtml}</div>
     `;
 
@@ -1457,7 +1453,7 @@ class AttendanceApp {
         backgroundColor: isDark ? '#0f2744' : '#ffffff',
         logging: false
       }).then(canvas => {
-        document.body.removeChild(card);
+        if (document.body.contains(card)) document.body.removeChild(card);
         canvas.toBlob((blob) => {
           if (!blob) return;
           const url = URL.createObjectURL(blob);
@@ -1470,31 +1466,72 @@ class AttendanceApp {
           setTimeout(() => URL.revokeObjectURL(url), 1000);
         }, 'image/jpeg', 0.97);
       }).catch(err => {
-        document.body.removeChild(card);
+        if (document.body.contains(card)) document.body.removeChild(card);
         console.error("html2canvas export error:", err);
-        this.fallbackChartExport();
+        alert("មានបញ្ហាក្នុងការបង្កើតរូបភាព JPEG: " + err.message);
       });
     } else {
-      document.body.removeChild(card);
-      this.fallbackChartExport();
+      if (document.body.contains(card)) document.body.removeChild(card);
+      alert("បណ្ណាល័យ html2canvas មិនទាន់ load រួចរាល់ទេ។ សូមព្យាយាមម្តងទៀត!");
     }
   }
 
-  fallbackChartExport() {
-    const chartCanvas = document.getElementById('attendanceDoughnutChart');
-    if (chartCanvas) {
-      chartCanvas.toBlob((blob) => {
-        if (!blob) return;
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Analytics_Chart_Grade12_${this.data.activeMonth}_${this.data.activeYear}.jpg`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-      }, 'image/jpeg', 0.95);
+  exportExcel() {
+    if (typeof XLSX === 'undefined') {
+      alert("បណ្ណាល័យ Excel (XLSX) មិនទាន់ load រួចរាល់ទេ។ សូមព្យាយាមម្តងទៀត!");
+      return;
     }
+    const cls = this.getCurrentClass();
+    const students = this.getClassStudents();
+    const schoolDays = this.getSchoolDaysInActiveMonth();
+
+    let data = [];
+    data.push([`តារាងស្រង់វត្តមានសិស្ស - ${cls.name}`]);
+    data.push([`ខែ/ឆ្នាំ: ${KHMER_MONTHS[this.data.activeMonth - 1]} ${this.data.activeYear}`]);
+    data.push([]);
+
+    let headers = ["ល.រ", "អត្តលេខ", "ឈ្មោះសិស្ស", "ភេទ"];
+    schoolDays.forEach(d => {
+      const dateObj = new Date(this.data.activeYear, this.data.activeMonth - 1, d);
+      if (dateObj.getDay() === 6) {
+        headers.push(`ថ្ងៃ${d}_សៅរ៍_ព្រឹក`);
+      } else {
+        headers.push(`ថ្ងៃ${d}_ព្រឹក`, `ថ្ងៃ${d}_ល្ងាច`);
+      }
+    });
+    headers.push("វត្តមាន (P)", "អវត្តមាន (A)", "ច្បាប់ (L)", "ភាគរយ (%)");
+    data.push(headers);
+
+    students.forEach((std, index) => {
+      let p = 0, a = 0, l = 0;
+      let row = [index + 1, std.code, std.name, std.gender];
+
+      schoolDays.forEach(day => {
+        const dateObj = new Date(this.data.activeYear, this.data.activeMonth - 1, day);
+        const isSaturday = dateObj.getDay() === 6;
+        const shifts = isSaturday ? ['AM'] : ['AM', 'PM'];
+
+        shifts.forEach(shift => {
+          const st = this.getAttendanceRecord(std.id, day, shift);
+          if (st === 'P') p++;
+          if (st === 'A') a++;
+          if (st === 'L') l++;
+          row.push(st === 'NONE' ? '-' : st);
+        });
+      });
+
+      const totalMarked = p + a + l;
+      const ratePct = totalMarked > 0 ? Math.round((p / totalMarked) * 100) : 100;
+
+      row.push(p, a, l, `${ratePct}%`);
+      data.push(row);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "វត្តមានសិស្ស");
+
+    XLSX.writeFile(wb, `Attendance_${cls.name}_${this.data.activeMonth}_${this.data.activeYear}.xlsx`);
   }
 
   exportCSV() {
